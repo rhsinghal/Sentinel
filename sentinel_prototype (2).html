@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentinel - Mental Health Companion</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f5f5f5;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .phone-frame {
+            max-width: 400px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+        }
+
+        .screen {
+            display: none;
+            padding: 16px;
+            min-height: 667px;
+            padding-bottom: 80px;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        .header {
+            padding: 12px 0 16px 0;
+            margin-bottom: 16px;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #000;
+            letter-spacing: -0.5px;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: #000;
+            font-size: 16px;
+            cursor: pointer;
+            padding: 4px 0;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+
+        .card h3 {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 14px;
+            color: #000;
+        }
+
+        .card p {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .metric:last-child {
+            border-bottom: none;
+        }
+
+        .metric-label {
+            font-size: 14px;
+            color: #333;
+        }
+
+        .metric-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #000;
+        }
+
+        .metric-change {
+            font-size: 12px;
+            margin-left: 6px;
+        }
+
+        .metric-change.down {
+            color: #dc2626;
+        }
+
+        .metric-change.up {
+            color: #16a34a;
+        }
+
+        .btn {
+            background: #000;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 12px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 8px;
+        }
+
+        .btn:hover {
+            background: #333;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #000;
+            border: 1px solid #000;
+        }
+
+        .btn-secondary:hover {
+            background: #f5f5f5;
+        }
+
+        .mood-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .mood-btn {
+            background: #fafafa;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 16px 8px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .mood-btn:active {
+            background: #f0f0f0;
+        }
+
+        .mood-emoji {
+            font-size: 28px;
+            margin-bottom: 6px;
+        }
+
+        .mood-label {
+            font-size: 12px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .insight-box {
+            background: #f9f9f9;
+            border-left: 2px solid #000;
+            padding: 12px;
+            margin: 12px 0;
+        }
+
+        .insight-box p {
+            font-size: 13px;
+            color: #333;
+            line-height: 1.5;
+        }
+
+        .session-prep-item {
+            background: #fafafa;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 14px;
+            margin-bottom: 10px;
+        }
+
+        .session-prep-item h4 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #000;
+        }
+
+        .session-prep-item p {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .contact-card {
+            background: #fafafa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 14px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .contact-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #e5e5e5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+            font-weight: 600;
+            font-size: 24px;
+        }
+
+        .contact-info h4 {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 2px;
+            color: #000;
+        }
+
+        .contact-info p {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .nav-bar {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            max-width: 390px;
+            width: 100%;
+            background: white;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0 20px 0;
+        }
+
+        .nav-item {
+            background: none;
+            border: none;
+            color: #999;
+            font-size: 11px;
+            cursor: pointer;
+            padding: 4px 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .nav-item.active {
+            color: #000;
+        }
+
+        .nav-icon {
+            font-size: 22px;
+        }
+
+        .question-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: #000;
+            margin-bottom: 6px;
+        }
+
+        .question-subtext {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .chart-placeholder {
+            background: #f5f5f5;
+            border: 1px dashed #ccc;
+            border-radius: 6px;
+            padding: 50px 16px;
+            text-align: center;
+            color: #999;
+            font-size: 13px;
+            margin: 12px 0;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        
+        <!-- HOME SCREEN -->
+        <div class="screen active" id="home">
+            <div class="header">
+                <h1>Sentinel</h1>
+            </div>
+
+            <div class="card">
+                <h3>Your Week at a Glance</h3>
+                <div class="metric">
+                    <span class="metric-label">Average Sleep</span>
+                    <span>
+                        <span class="metric-value">6h 15m</span>
+                        <span class="metric-change down">↓ 1h 30m</span>
+                    </span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Daily Activity</span>
+                    <span>
+                        <span class="metric-value">4,200 steps</span>
+                        <span class="metric-change down">↓ 2,100</span>
+                    </span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Screen Time</span>
+                    <span>
+                        <span class="metric-value">7h 45m</span>
+                        <span class="metric-change up">↑ 2h 15m</span>
+                    </span>
+                </div>
+            </div>
+
+            <div class="insight-box">
+                <p><strong>Notice anything?</strong> Your sleep has dropped by about 1.5 hours over the past week, and you're moving less. This might be worth mentioning in your next session.</p>
+            </div>
+
+            <button class="btn" onclick="showScreen('checkin')">Complete Today's Check-in</button>
+            <button class="btn btn-secondary" onclick="showScreen('weekly')">View Weekly Summary</button>
+
+            <div class="nav-bar">
+                <button class="nav-item active" onclick="showScreen('home')">
+                    <div class="nav-icon">●</div>
+                    <div>Home</div>
+                </button>
+                <button class="nav-item" onclick="showScreen('weekly')">
+                    <div class="nav-icon">▢</div>
+                    <div>Weekly</div>
+                </button>
+                <button class="nav-item" onclick="showScreen('session')">
+                    <div class="nav-icon">✎</div>
+                    <div>Session</div>
+                </button>
+                <button class="nav-item" onclick="showScreen('circle')">
+                    <div class="nav-icon">◯</div>
+                    <div>Circle</div>
+                </button>
+            </div>
+        </div>
+
+        <!-- DAILY CHECK-IN SCREEN -->
+        <div class="screen" id="checkin">
+            <div class="header">
+                <button class="back-btn" onclick="showScreen('home')">← Back</button>
+                <h1>Daily Check-in</h1>
+            </div>
+
+            <p class="question-text">How are you feeling today?</p>
+            <p class="question-subtext">Just a quick check - takes 10 seconds</p>
+
+            <div class="mood-options">
+                <div class="mood-btn">
+                    <div class="mood-emoji">:)</div>
+                    <div class="mood-label">Great</div>
+                </div>
+                <div class="mood-btn">
+                    <div class="mood-emoji">:)</div>
+                    <div class="mood-label">Good</div>
+                </div>
+                <div class="mood-btn">
+                    <div class="mood-emoji">:|</div>
+                    <div class="mood-label">Okay</div>
+                </div>
+                <div class="mood-btn">
+                    <div class="mood-emoji">:/</div>
+                    <div class="mood-label">Not great</div>
+                </div>
+                <div class="mood-btn">
+                    <div class="mood-emoji">:(</div>
+                    <div class="mood-label">Struggling</div>
+                </div>
+                <div class="mood-btn">
+                    <div class="mood-emoji">:(</div>
+                    <div class="mood-label">Really bad</div>
+                </div>
+            </div>
+
+            <p class="question-text" style="margin-top: 32px;">Anything specific on your mind?</p>
+            <p class="question-subtext">Optional - helps add context</p>
+
+            <div class="mood-options" style="grid-template-columns: repeat(2, 1fr);">
+                <div class="mood-btn">
+                    <div class="mood-label">Exams/Deadlines</div>
+                </div>
+                <div class="mood-btn">
+                    <div class="mood-label">Social stress</div>
+                </div>
+                <div class="mood-btn">
+                    <div class="mood-label">Family issues</div>
+                </div>
+                <div class="mood-btn">
+                    <div class="mood-label">Feeling lonely</div>
+                </div>
+                <div class="mood-btn">
+                    <div class="mood-label">Physical health</div>
+                </div>
+                <div class="mood-btn">
+                    <div class="mood-label">Nothing specific</div>
+                </div>
+            </div>
+
+            <button class="btn" onclick="showScreen('home')" style="margin-top: 32px;">Submit Check-in</button>
+        </div>
+
+        <!-- WEEKLY SUMMARY SCREEN -->
+        <div class="screen" id="weekly">
+            <div class="header">
+                <button class="back-btn" onclick="showScreen('home')">← Back</button>
+                <h1>Weekly Summary</h1>
+            </div>
+
+            <div class="card">
+                <h3>Sleep Patterns</h3>
+                <div class="chart-placeholder">
+                    [sleep graph would go here]
+                </div>
+                <p>Your sleep has decreased by 1.5 hours this week. You've been going to bed later (avg 1:30am vs usual 11:30pm).</p>
+            </div>
+
+            <div class="card">
+                <h3>Activity Levels</h3>
+                <div class="chart-placeholder">
+                    [activity graph would go here]
+                </div>
+                <p>You're moving about 2,100 fewer steps per day than last week. Most of the decrease happened in the last 3 days.</p>
+            </div>
+
+            <div class="card">
+                <h3>Mood Check-ins</h3>
+                <div class="chart-placeholder">
+                    [mood check-ins graph would go here]
+                </div>
+                <p>You've checked in 6 out of 7 days. Most common feelings: "Not great" (3 days), "Okay" (2 days). Common stressors: Exams/Deadlines, Feeling lonely.</p>
+            </div>
+
+            <button class="btn" onclick="showScreen('session')">Prepare for Next Session</button>
+        </div>
+
+        <!-- SESSION PREP SCREEN -->
+        <div class="screen" id="session">
+            <div class="header">
+                <button class="back-btn" onclick="showScreen('home')">← Back</button>
+                <h1>Session Prep</h1>
+            </div>
+
+            <p class="question-subtext" style="margin-bottom: 24px;">Key changes to discuss with your counselor</p>
+
+            <div class="session-prep-item">
+                <h4>Sleep has decreased significantly</h4>
+                <p>Down 1.5 hours/night this week (from 7.5h to 6h). You've been going to bed around 1:30am instead of your usual 11:30pm.</p>
+            </div>
+
+            <div class="session-prep-item">
+                <h4>Less physical activity</h4>
+                <p>Daily steps dropped from 6,500 to 4,200 over the past week. Most noticeable in the last 3 days.</p>
+            </div>
+
+            <div class="session-prep-item">
+                <h4>Screen time increased</h4>
+                <p>Up 2 hours/day (from 5.5h to 7.5h). Most time spent on social media and YouTube.</p>
+            </div>
+
+            <div class="session-prep-item">
+                <h4>Mood trending lower</h4>
+                <p>Most common check-in: "Not great" (3/6 days). Main stressors: upcoming exams and feeling lonely.</p>
+            </div>
+
+            <div class="insight-box">
+                <p><strong>Pattern noticed:</strong> The changes started around the same time you mentioned exam stress in your check-ins. Your sleep, activity, and mood seem to be connected to deadline pressure.</p>
+            </div>
+
+            <button class="btn">Share This Summary</button>
+            <button class="btn btn-secondary" onclick="showScreen('home')">Done</button>
+        </div>
+
+        <!-- CARE CIRCLE SCREEN -->
+        <div class="screen" id="circle">
+            <div class="header">
+                <button class="back-btn" onclick="showScreen('home')">← Back</button>
+                <h1>Care Circle</h1>
+            </div>
+
+            <p class="question-subtext" style="margin-bottom: 24px;">People you trust with your wellbeing updates</p>
+
+            <div class="contact-card">
+                <div class="contact-avatar">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="8" r="3.5" fill="#888"/>
+                        <path d="M6 18c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="#888" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <div class="contact-info">
+                    <h4>Mum</h4>
+                    <p>Receives weekly summaries</p>
+                </div>
+            </div>
+
+            <div class="contact-card">
+                <div class="contact-avatar">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="8" r="3.5" fill="#888"/>
+                        <path d="M6 18c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="#888" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <div class="contact-info">
+                    <h4>Sarah (Best Friend)</h4>
+                    <p>Can see when you're struggling</p>
+                </div>
+            </div>
+
+            <div class="contact-card">
+                <div class="contact-avatar">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="8" r="3.5" fill="#888"/>
+                        <path d="M6 18c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="#888" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <div class="contact-info">
+                    <h4>Dr. Murphy (Counselor)</h4>
+                    <p>Full access to session prep data</p>
+                </div>
+            </div>
+
+            <button class="btn">Add Someone to Circle</button>
+            
+            <div class="insight-box" style="margin-top: 24px;">
+                <p><strong>Privacy Note:</strong> You control what each person sees and can remove them anytime. They'll only see summaries, not your daily check-ins or raw data.</p>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function showScreen(screenId) {
+            // Hide all screens
+            const screens = document.querySelectorAll('.screen');
+            screens.forEach(screen => screen.classList.remove('active'));
+            
+            // Show selected screen
+            document.getElementById(screenId).classList.add('active');
+
+            // Update nav bar active state
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => item.classList.remove('active'));
+            
+            // Scroll to top when changing screens
+            window.scrollTo(0, 0);
+        }
+    </script>
+</body>
+</html>
