@@ -470,34 +470,270 @@
 
             <div class="card">
                 <h3>Sleep Patterns</h3>
-                <div class="chart-placeholder">
-                    [sleep graph: Week 1 avg 6.6h → Week 2 avg 6.7h]
-                </div>
+                <svg viewBox="0 0 320 120" style="width: 100%; height: 120px; margin: 12px 0;">
+                    <!-- Grid lines -->
+                    <line x1="40" y1="20" x2="310" y2="20" stroke="#f0f0f0" stroke-width="1"/>
+                    <line x1="40" y1="45" x2="310" y2="45" stroke="#f0f0f0" stroke-width="1"/>
+                    <line x1="40" y1="70" x2="310" y2="70" stroke="#f0f0f0" stroke-width="1"/>
+                    <line x1="40" y1="95" x2="310" y2="95" stroke="#f0f0f0" stroke-width="1"/>
+                    
+                    <!-- Y-axis labels -->
+                    <text x="5" y="25" font-size="10" fill="#999">10h</text>
+                    <text x="10" y="50" font-size="10" fill="#999">8h</text>
+                    <text x="10" y="75" font-size="10" fill="#999">6h</text>
+                    <text x="10" y="100" font-size="10" fill="#999">4h</text>
+                    
+                    <!-- Week 1 line (baseline) - dashed -->
+                    <polyline
+                        points="50,38 88,82 126,35 164,88 202,20 240,67 278,26"
+                        fill="none"
+                        stroke="#ccc"
+                        stroke-width="2"
+                        stroke-dasharray="4,4"/>
+                    
+                    <!-- Week 2 line (current) - solid -->
+                    <polyline
+                        points="50,30 88,38 126,38 164,50 202,47 240,35 278,66"
+                        fill="none"
+                        stroke="#000"
+                        stroke-width="2.5"/>
+                    
+                    <!-- Week 2 data points -->
+                    <circle cx="50" cy="30" r="3" fill="#000"/>
+                    <circle cx="88" cy="38" r="3" fill="#000"/>
+                    <circle cx="126" cy="38" r="3" fill="#000"/>
+                    <circle cx="164" cy="50" r="3" fill="#000"/>
+                    <circle cx="202" cy="47" r="3" fill="#000"/>
+                    <circle cx="240" cy="35" r="3" fill="#000"/>
+                    <circle cx="278" cy="66" r="3" fill="#000"/>
+                    
+                    <!-- X-axis labels -->
+                    <text x="45" y="115" font-size="9" fill="#999">Mon</text>
+                    <text x="83" y="115" font-size="9" fill="#999">Tue</text>
+                    <text x="120" y="115" font-size="9" fill="#999">Wed</text>
+                    <text x="160" y="115" font-size="9" fill="#999">Thu</text>
+                    <text x="200" y="115" font-size="9" fill="#999">Fri</text>
+                    <text x="237" y="115" font-size="9" fill="#999">Sat</text>
+                    <text x="274" y="115" font-size="9" fill="#999">Sun</text>
+                </svg>
+                <p style="font-size: 11px; color: #999; margin-top: 4px;">
+                    <span style="display: inline-block; width: 12px; height: 2px; background: #000; margin-right: 4px; vertical-align: middle;"></span> This week
+                    <span style="display: inline-block; width: 12px; height: 2px; background: #ccc; margin: 0 4px 0 12px; vertical-align: middle; border-top: 2px dashed #ccc;"></span> Last week
+                </p>
                 <p>Your sleep stayed relatively stable this week (6.7 hours average), but individual nights varied significantly - from 5.7 to 7.6 hours.</p>
             </div>
 
             <div class="card">
                 <h3>Resting Heart Rate</h3>
-                <div class="chart-placeholder">
-                    [heart rate graph: Week 1 avg 85.6 BPM → Week 2 avg 66.4 BPM]
-                </div>
+                <svg viewBox="0 0 320 120" style="width: 100%; height: 120px; margin: 12px 0;">
+                    <!-- Grid lines -->
+                    <line x1="40" y1="20" x2="310" y2="20" stroke="#f0f0f0" stroke-width="1"/>
+                    <line x1="40" y1="40" x2="310" y2="40" stroke="#f0f0f0" stroke-width="1"/>
+                    <line x1="40" y1="60" x2="310" y2="60" stroke="#f0f0f0" stroke-width="1"/>
+                    <line x1="40" y1="80" x2="310" y2="80" stroke="#f0f0f0" stroke-width="1"/>
+                    <line x1="40" y1="100" x2="310" y2="100" stroke="#f0f0f0" stroke-width="1"/>
+                    
+                    <!-- Y-axis labels -->
+                    <text x="5" y="25" font-size="10" fill="#999">110</text>
+                    <text x="10" y="45" font-size="10" fill="#999">90</text>
+                    <text x="10" y="65" font-size="10" fill="#999">70</text>
+                    <text x="10" y="85" font-size="10" fill="#999">50</text>
+                    
+                    <!-- Week 1 line (baseline) - dashed -->
+                    <polyline
+                        points="50,43 88,60 126,35 164,66 202,40 240,25 278,47"
+                        fill="none"
+                        stroke="#ccc"
+                        stroke-width="2"
+                        stroke-dasharray="4,4"/>
+                    
+                    <!-- Week 2 line (current) - solid -->
+                    <polyline
+                        points="50,72 88,55 126,63 164,63 202,61 240,53 278,70"
+                        fill="none"
+                        stroke="#000"
+                        stroke-width="2.5"/>
+                    
+                    <!-- Week 2 data points -->
+                    <circle cx="50" cy="72" r="3" fill="#000"/>
+                    <circle cx="88" cy="55" r="3" fill="#000"/>
+                    <circle cx="126" cy="63" r="3" fill="#000"/>
+                    <circle cx="164" cy="63" r="3" fill="#000"/>
+                    <circle cx="202" cy="61" r="3" fill="#000"/>
+                    <circle cx="240" cy="53" r="3" fill="#000"/>
+                    <circle cx="278" cy="70" r="3" fill="#000"/>
+                    
+                    <!-- X-axis labels -->
+                    <text x="45" y="115" font-size="9" fill="#999">Mon</text>
+                    <text x="83" y="115" font-size="9" fill="#999">Tue</text>
+                    <text x="120" y="115" font-size="9" fill="#999">Wed</text>
+                    <text x="160" y="115" font-size="9" fill="#999">Thu</text>
+                    <text x="200" y="115" font-size="9" fill="#999">Fri</text>
+                    <text x="237" y="115" font-size="9" fill="#999">Sat</text>
+                    <text x="274" y="115" font-size="9" fill="#999">Sun</text>
+                </svg>
+                <p style="font-size: 11px; color: #999; margin-top: 4px;">
+                    <span style="display: inline-block; width: 12px; height: 2px; background: #000; margin-right: 4px; vertical-align: middle;"></span> This week
+                    <span style="display: inline-block; width: 12px; height: 2px; background: #ccc; margin: 0 4px 0 12px; vertical-align: middle; border-top: 2px dashed #ccc;"></span> Last week
+                </p>
                 <p>Your resting heart rate decreased by 19.1 BPM this week (from 85.6 to 66.4). This could indicate improved recovery, reduced stress, or changes in activity patterns.</p>
             </div>
 
             <div class="card">
                 <h3>Activity Levels</h3>
-                <div class="chart-placeholder">
-                    [activity graph: Week 1 avg 7,141 steps → Week 2 avg 4,780 steps]
-                </div>
+                <svg viewBox="0 0 320 120" style="width: 100%; height: 120px; margin: 12px 0;">
+                    <!-- Grid lines -->
+                    <line x1="40" y1="20" x2="310" y2="20" stroke="#f0f0f0" stroke-width="1"/>
+                    <line x1="40" y1="40" x2="310" y2="40" stroke="#f0f0f0" stroke-width="1"/>
+                    <line x1="40" y1="60" x2="310" y2="60" stroke="#f0f0f0" stroke-width="1"/>
+                    <line x1="40" y1="80" x2="310" y2="80" stroke="#f0f0f0" stroke-width="1"/>
+                    <line x1="40" y1="100" x2="310" y2="100" stroke="#f0f0f0" stroke-width="1"/>
+                    
+                    <!-- Y-axis labels -->
+                    <text x="2" y="25" font-size="10" fill="#999">16k</text>
+                    <text x="2" y="45" font-size="10" fill="#999">12k</text>
+                    <text x="5" y="65" font-size="10" fill="#999">8k</text>
+                    <text x="5" y="85" font-size="10" fill="#999">4k</text>
+                    <text x="13" y="105" font-size="10" fill="#999">0</text>
+                    
+                    <!-- Week 1 line (baseline) - dashed -->
+                    <polyline
+                        points="50,98 88,95 126,82 164,75 202,35 240,30 278,85"
+                        fill="none"
+                        stroke="#ccc"
+                        stroke-width="2"
+                        stroke-dasharray="4,4"/>
+                    
+                    <!-- Week 2 line (current) - solid -->
+                    <polyline
+                        points="50,88 88,92 126,60 164,73 202,64 240,71 278,99"
+                        fill="none"
+                        stroke="#000"
+                        stroke-width="2.5"/>
+                    
+                    <!-- Week 2 data points -->
+                    <circle cx="50" cy="88" r="3" fill="#000"/>
+                    <circle cx="88" cy="92" r="3" fill="#000"/>
+                    <circle cx="126" cy="60" r="3" fill="#000"/>
+                    <circle cx="164" cy="73" r="3" fill="#000"/>
+                    <circle cx="202" cy="64" r="3" fill="#000"/>
+                    <circle cx="240" cy="71" r="3" fill="#000"/>
+                    <circle cx="278" cy="99" r="3" fill="#000"/>
+                    
+                    <!-- X-axis labels -->
+                    <text x="45" y="115" font-size="9" fill="#999">Mon</text>
+                    <text x="83" y="115" font-size="9" fill="#999">Tue</text>
+                    <text x="120" y="115" font-size="9" fill="#999">Wed</text>
+                    <text x="160" y="115" font-size="9" fill="#999">Thu</text>
+                    <text x="200" y="115" font-size="9" fill="#999">Fri</text>
+                    <text x="237" y="115" font-size="9" fill="#999">Sat</text>
+                    <text x="274" y="115" font-size="9" fill="#999">Sun</text>
+                </svg>
+                <p style="font-size: 11px; color: #999; margin-top: 4px;">
+                    <span style="display: inline-block; width: 12px; height: 2px; background: #000; margin-right: 4px; vertical-align: middle;"></span> This week
+                    <span style="display: inline-block; width: 12px; height: 2px; background: #ccc; margin: 0 4px 0 12px; vertical-align: middle; border-top: 2px dashed #ccc;"></span> Last week
+                </p>
                 <p>You're moving about 2,361 fewer steps per day than last week. Your activity has been more consistent but at a lower baseline.</p>
             </div>
 
             <div class="card">
-                <h3>Mood Check-ins</h3>
-                <div class="chart-placeholder">
-                    [mood check-ins graph would go here]
+                <h3>Mood & Stress Tracking</h3>
+                
+                <!-- Container for side-by-side graphs -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 12px 0;">
+                    
+                    <!-- Stress Level Line Graph (Left) -->
+                    <div>
+                        <p style="font-size: 12px; font-weight: 600; margin-bottom: 8px; color: #666;">Stress Level</p>
+                        <svg viewBox="0 0 160 100" style="width: 100%; height: 100px;">
+                            <!-- Grid lines -->
+                            <line x1="20" y1="15" x2="150" y2="15" stroke="#f0f0f0" stroke-width="1"/>
+                            <line x1="20" y1="35" x2="150" y2="35" stroke="#f0f0f0" stroke-width="1"/>
+                            <line x1="20" y1="55" x2="150" y2="55" stroke="#f0f0f0" stroke-width="1"/>
+                            <line x1="20" y1="75" x2="150" y2="75" stroke="#f0f0f0" stroke-width="1"/>
+                            
+                            <!-- Y-axis labels -->
+                            <text x="5" y="19" font-size="9" fill="#999">10</text>
+                            <text x="8" y="39" font-size="9" fill="#999">7</text>
+                            <text x="8" y="59" font-size="9" fill="#999">4</text>
+                            <text x="8" y="79" font-size="9" fill="#999">1</text>
+                            
+                            <!-- Stress line -->
+                            <polyline
+                                points="28,55 46,51 64,15 82,35 100,75 118,51 136,75"
+                                fill="none"
+                                stroke="#dc2626"
+                                stroke-width="2"/>
+                            
+                            <!-- Data points -->
+                            <circle cx="28" cy="55" r="2.5" fill="#dc2626"/>
+                            <circle cx="46" cy="51" r="2.5" fill="#dc2626"/>
+                            <circle cx="64" cy="15" r="2.5" fill="#dc2626"/>
+                            <circle cx="82" cy="35" r="2.5" fill="#dc2626"/>
+                            <circle cx="100" cy="75" r="2.5" fill="#dc2626"/>
+                            <circle cx="118" cy="51" r="2.5" fill="#dc2626"/>
+                            <circle cx="136" cy="75" r="2.5" fill="#dc2626"/>
+                            
+                            <!-- X-axis labels -->
+                            <text x="24" y="93" font-size="8" fill="#999">M</text>
+                            <text x="43" y="93" font-size="8" fill="#999">T</text>
+                            <text x="61" y="93" font-size="8" fill="#999">W</text>
+                            <text x="79" y="93" font-size="8" fill="#999">T</text>
+                            <text x="98" y="93" font-size="8" fill="#999">F</text>
+                            <text x="115" y="93" font-size="8" fill="#999">S</text>
+                            <text x="133" y="93" font-size="8" fill="#999">S</text>
+                        </svg>
+                    </div>
+                    
+                    <!-- Mood Calendar Heatmap (Right) -->
+                    <div>
+                        <p style="font-size: 12px; font-weight: 600; margin-bottom: 8px; color: #666;">Daily Mood</p>
+                        <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-top: 12px;">
+                            <!-- Monday - Okay -->
+                            <div style="text-align: center;">
+                                <div style="width: 100%; aspect-ratio: 1; background: #fbbf24; border-radius: 4px; margin-bottom: 4px;"></div>
+                                <span style="font-size: 7px; color: #999;">M</span>
+                            </div>
+                            <!-- Tuesday - Okay -->
+                            <div style="text-align: center;">
+                                <div style="width: 100%; aspect-ratio: 1; background: #fbbf24; border-radius: 4px; margin-bottom: 4px;"></div>
+                                <span style="font-size: 7px; color: #999;">T</span>
+                            </div>
+                            <!-- Wednesday - Struggling -->
+                            <div style="text-align: center;">
+                                <div style="width: 100%; aspect-ratio: 1; background: #dc2626; border-radius: 4px; margin-bottom: 4px;"></div>
+                                <span style="font-size: 7px; color: #999;">W</span>
+                            </div>
+                            <!-- Thursday - Not great -->
+                            <div style="text-align: center;">
+                                <div style="width: 100%; aspect-ratio: 1; background: #f97316; border-radius: 4px; margin-bottom: 4px;"></div>
+                                <span style="font-size: 7px; color: #999;">T</span>
+                            </div>
+                            <!-- Friday - Great -->
+                            <div style="text-align: center;">
+                                <div style="width: 100%; aspect-ratio: 1; background: #22c55e; border-radius: 4px; margin-bottom: 4px;"></div>
+                                <span style="font-size: 7px; color: #999;">F</span>
+                            </div>
+                            <!-- Saturday - Okay -->
+                            <div style="text-align: center;">
+                                <div style="width: 100%; aspect-ratio: 1; background: #fbbf24; border-radius: 4px; margin-bottom: 4px;"></div>
+                                <span style="font-size: 7px; color: #999;">S</span>
+                            </div>
+                            <!-- Sunday - Great -->
+                            <div style="text-align: center;">
+                                <div style="width: 100%; aspect-ratio: 1; background: #22c55e; border-radius: 4px; margin-bottom: 4px;"></div>
+                                <span style="font-size: 7px; color: #999;">S</span>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 8px; margin-top: 12px; font-size: 9px; color: #999;">
+                            <div><span style="display: inline-block; width: 8px; height: 8px; background: #22c55e; border-radius: 2px; margin-right: 3px;"></span>Great</div>
+                            <div><span style="display: inline-block; width: 8px; height: 8px; background: #fbbf24; border-radius: 2px; margin-right: 3px;"></span>Okay</div>
+                            <div><span style="display: inline-block; width: 8px; height: 8px; background: #f97316; border-radius: 2px; margin-right: 3px;"></span>Not great</div>
+                        </div>
+                    </div>
                 </div>
-                <p>You've checked in 6 out of 7 days. Most common feelings: "Not great" (3 days), "Okay" (2 days). Common stressors: Exams/Deadlines, Feeling lonely.</p>
+                
+                <p>You've checked in 6 out of 7 days. Most common feelings: "Okay" (3 days), "Great" (2 days). Common stressors: Exams/Deadlines, Feeling lonely. Stress peaked on Wednesday (10/10) - the same day you mentioned having an exam.</p>
             </div>
 
             <button class="btn" onclick="showScreen('session')">Prepare for Next Session</button>
