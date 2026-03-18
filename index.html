@@ -398,10 +398,20 @@
             background: #fafafa;
             border: 2px solid #e0e0e0;
             border-radius: 8px;
-            padding: 12px 20px;
+            padding: 12px 16px;
             cursor: pointer;
             font-size: 32px;
             transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .emoji-text {
+            font-size: 12px;
+            font-weight: 500;
+            color: #666;
         }
 
         .emoji-option:hover {
@@ -1064,9 +1074,18 @@
                 <div class="feedback-question">
                     <label>How useful would Sentinel be for your counseling sessions?</label>
                     <div class="emoji-options">
-                        <div class="emoji-option" data-question="usefulness" data-value="not-useful">😞</div>
-                        <div class="emoji-option" data-question="usefulness" data-value="somewhat-useful">😐</div>
-                        <div class="emoji-option" data-question="usefulness" data-value="very-useful">😊</div>
+                        <div class="emoji-option" data-question="usefulness" data-value="not-useful">
+                            <span>😞</span>
+                            <span class="emoji-text">Not useful</span>
+                        </div>
+                        <div class="emoji-option" data-question="usefulness" data-value="somewhat-useful">
+                            <span>😐</span>
+                            <span class="emoji-text">Somewhat useful</span>
+                        </div>
+                        <div class="emoji-option" data-question="usefulness" data-value="very-useful">
+                            <span>😊</span>
+                            <span class="emoji-text">Very useful</span>
+                        </div>
                     </div>
                 </div>
 
@@ -1097,9 +1116,18 @@
                 <div class="feedback-question">
                     <label>Would you feel comfortable using Sentinel to track sleep, heart rate, and activity?</label>
                     <div class="emoji-options">
-                        <div class="emoji-option" data-question="comfortable" data-value="no">No</div>
-                        <div class="emoji-option" data-question="comfortable" data-value="maybe">Maybe</div>
-                        <div class="emoji-option" data-question="comfortable" data-value="yes">Yes</div>
+                        <div class="emoji-option" data-question="comfortable" data-value="no">
+                            <span>👎</span>
+                            <span class="emoji-text">No</span>
+                        </div>
+                        <div class="emoji-option" data-question="comfortable" data-value="maybe">
+                            <span>🤷</span>
+                            <span class="emoji-text">Maybe</span>
+                        </div>
+                        <div class="emoji-option" data-question="comfortable" data-value="yes">
+                            <span>👍</span>
+                            <span class="emoji-text">Yes</span>
+                        </div>
                     </div>
                 </div>
 
@@ -1119,9 +1147,18 @@
                 <div class="feedback-question">
                     <label>I would be willing to share this data with my counselor</label>
                     <div class="emoji-options">
-                        <div class="emoji-option" data-question="share" data-value="no">No</div>
-                        <div class="emoji-option" data-question="share" data-value="maybe">Maybe</div>
-                        <div class="emoji-option" data-question="share" data-value="yes">Yes</div>
+                        <div class="emoji-option" data-question="share" data-value="no">
+                            <span>👎</span>
+                            <span class="emoji-text">No</span>
+                        </div>
+                        <div class="emoji-option" data-question="share" data-value="maybe">
+                            <span>🤷</span>
+                            <span class="emoji-text">Maybe</span>
+                        </div>
+                        <div class="emoji-option" data-question="share" data-value="yes">
+                            <span>👍</span>
+                            <span class="emoji-text">Yes</span>
+                        </div>
                     </div>
                 </div>
 
