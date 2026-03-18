@@ -315,6 +315,218 @@
             margin: 12px 0;
             font-style: italic;
         }
+
+        .feedback-btn {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            background: #000;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 56px;
+            height: 56px;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 1000;
+        }
+
+        .feedback-btn:hover {
+            background: #333;
+        }
+
+        .feedback-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .feedback-modal.active {
+            display: flex;
+        }
+
+        .feedback-content {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .feedback-content h2 {
+            font-size: 24px;
+            margin-bottom: 8px;
+            color: #000;
+        }
+
+        .feedback-content p {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .feedback-question {
+            margin-bottom: 24px;
+        }
+
+        .feedback-question label {
+            display: block;
+            font-size: 15px;
+            font-weight: 600;
+            color: #000;
+            margin-bottom: 12px;
+        }
+
+        .emoji-options {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .emoji-option {
+            background: #fafafa;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 12px 20px;
+            cursor: pointer;
+            font-size: 32px;
+            transition: all 0.2s;
+        }
+
+        .emoji-option:hover {
+            border-color: #000;
+            background: white;
+        }
+
+        .emoji-option.selected {
+            border-color: #000;
+            background: #f0f0f0;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .checkbox-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .checkbox-option input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .checkbox-option label {
+            font-size: 14px;
+            font-weight: 400;
+            color: #333;
+            cursor: pointer;
+            margin: 0;
+        }
+
+        .star-rating {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .star {
+            font-size: 32px;
+            cursor: pointer;
+            color: #e0e0e0;
+            transition: color 0.2s;
+        }
+
+        .star:hover,
+        .star.selected {
+            color: #fbbf24;
+        }
+
+        .text-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .text-input:focus {
+            outline: none;
+            border-color: #000;
+        }
+
+        .feedback-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .feedback-submit {
+            flex: 1;
+            background: #000;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 14px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .feedback-submit:hover {
+            background: #333;
+        }
+
+        .feedback-cancel {
+            background: white;
+            color: #000;
+            border: 1px solid #000;
+            border-radius: 6px;
+            padding: 14px 24px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .feedback-cancel:hover {
+            background: #f5f5f5;
+        }
+
+        .feedback-success {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .feedback-success h3 {
+            font-size: 20px;
+            margin-bottom: 8px;
+            color: #000;
+        }
+
+        .feedback-success p {
+            color: #666;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
@@ -409,7 +621,7 @@
 
             <div class="mood-options">
                 <div class="mood-btn">
-                    <div class="mood-emoji">:))</div>
+                    <div class="mood-emoji">:)</div>
                     <div class="mood-label">Great</div>
                 </div>
                 <div class="mood-btn">
@@ -429,7 +641,7 @@
                     <div class="mood-label">Struggling</div>
                 </div>
                 <div class="mood-btn">
-                    <div class="mood-emoji">:((</div>
+                    <div class="mood-emoji">:(</div>
                     <div class="mood-label">Really bad</div>
                 </div>
             </div>
@@ -811,7 +1023,7 @@
                     </svg>
                 </div>
                 <div class="contact-info">
-                    <h4>Best Friend</h4>
+                    <h4>Sarah (Best Friend)</h4>
                     <p>Can see when you're struggling</p>
                 </div>
             </div>
@@ -824,7 +1036,7 @@
                     </svg>
                 </div>
                 <div class="contact-info">
-                    <h4>Counselor</h4>
+                    <h4>Dr. Murphy (Counselor)</h4>
                     <p>Full access to session prep data</p>
                 </div>
             </div>
@@ -836,6 +1048,101 @@
             </div>
         </div>
 
+    </div>
+
+    <!-- Feedback Button -->
+    <button class="feedback-btn" onclick="openFeedback()">💬</button>
+
+    <!-- Feedback Modal -->
+    <div class="feedback-modal" id="feedbackModal">
+        <div class="feedback-content" id="feedbackContent">
+            <h2>Help us improve Sentinel</h2>
+            <p>Your feedback shapes how we build this tool. Takes 2 minutes.</p>
+
+            <form id="feedbackForm">
+                <!-- Question 1 -->
+                <div class="feedback-question">
+                    <label>How useful would Sentinel be for your counseling sessions?</label>
+                    <div class="emoji-options">
+                        <div class="emoji-option" data-question="usefulness" data-value="not-useful">😞</div>
+                        <div class="emoji-option" data-question="usefulness" data-value="somewhat-useful">😐</div>
+                        <div class="emoji-option" data-question="usefulness" data-value="very-useful">😊</div>
+                    </div>
+                </div>
+
+                <!-- Question 2 -->
+                <div class="feedback-question">
+                    <label>Which feature is most valuable? (select all that apply)</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-option">
+                            <input type="checkbox" id="feature-weekly" name="features" value="weekly-summaries">
+                            <label for="feature-weekly">Weekly summaries</label>
+                        </div>
+                        <div class="checkbox-option">
+                            <input type="checkbox" id="feature-session" name="features" value="session-prep">
+                            <label for="feature-session">Session prep tool</label>
+                        </div>
+                        <div class="checkbox-option">
+                            <input type="checkbox" id="feature-context" name="features" value="context-prompts">
+                            <label for="feature-context">Context-aware prompts ("Your heart rate spiked on exam day...")</label>
+                        </div>
+                        <div class="checkbox-option">
+                            <input type="checkbox" id="feature-circle" name="features" value="care-circle">
+                            <label for="feature-circle">Care Circle</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Question 3 -->
+                <div class="feedback-question">
+                    <label>Would you feel comfortable using Sentinel to track sleep, heart rate, and activity?</label>
+                    <div class="emoji-options">
+                        <div class="emoji-option" data-question="comfortable" data-value="no"></div>
+                        <div class="emoji-option" data-question="comfortable" data-value="maybe"></div>
+                        <div class="emoji-option" data-question="comfortable" data-value="yes"></div>
+                    </div>
+                </div>
+
+                <!-- Question 4 -->
+                <div class="feedback-question">
+                    <label>Receiving personalized suggestions based on your data would be helpful</label>
+                    <div class="star-rating">
+                        <span class="star" data-question="suggestions" data-value="1">★</span>
+                        <span class="star" data-question="suggestions" data-value="2">★</span>
+                        <span class="star" data-question="suggestions" data-value="3">★</span>
+                        <span class="star" data-question="suggestions" data-value="4">★</span>
+                        <span class="star" data-question="suggestions" data-value="5">★</span>
+                    </div>
+                </div>
+
+                <!-- Question 5 -->
+                <div class="feedback-question">
+                    <label>I would be willing to share this data with my counselor</label>
+                    <div class="emoji-options">
+                        <div class="emoji-option" data-question="share" data-value="no"></div>
+                        <div class="emoji-option" data-question="share" data-value="maybe"></div>
+                        <div class="emoji-option" data-question="share" data-value="yes"></div>
+                    </div>
+                </div>
+
+                <!-- Question 6 -->
+                <div class="feedback-question">
+                    <label>What would make you more likely to use Sentinel?</label>
+                    <textarea class="text-input" name="improvements" placeholder="Your thoughts..."></textarea>
+                </div>
+
+                <!-- Question 7 -->
+                <div class="feedback-question">
+                    <label>Any concerns or missing features?</label>
+                    <textarea class="text-input" name="concerns" placeholder="Your thoughts..."></textarea>
+                </div>
+
+                <div class="feedback-buttons">
+                    <button type="button" class="feedback-cancel" onclick="closeFeedback()">Cancel</button>
+                    <button type="submit" class="feedback-submit">Submit Feedback</button>
+                </div>
+            </form>
+        </div>
     </div>
 
     <script>
@@ -871,6 +1178,9 @@
         const screenTimeWeek2 = 7.5;
         const screenTimeChange = screenTimeWeek2 - screenTimeWeek1;
 
+        // Feedback form data
+        let feedbackData = {};
+
         function showScreen(screenId) {
             // Hide all screens
             const screens = document.querySelectorAll('.screen');
@@ -885,6 +1195,14 @@
             
             // Scroll to top when changing screens
             window.scrollTo(0, 0);
+        }
+
+        function openFeedback() {
+            document.getElementById('feedbackModal').classList.add('active');
+        }
+
+        function closeFeedback() {
+            document.getElementById('feedbackModal').classList.remove('active');
         }
 
         // Update metrics on page load
@@ -943,7 +1261,90 @@
                 const changeText = `↑ ${changeHours}h ${changeMins}m`;
                 screenChangeEl.textContent = changeText;
             }
+
+            // Feedback form interactions
+            setupFeedbackForm();
         });
+
+        function setupFeedbackForm() {
+            // Emoji option clicks
+            document.querySelectorAll('.emoji-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const question = this.dataset.question;
+                    const value = this.dataset.value;
+                    
+                    // Deselect other options for this question
+                    document.querySelectorAll(`.emoji-option[data-question="${question}"]`).forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    
+                    // Select this option
+                    this.classList.add('selected');
+                    feedbackData[question] = value;
+                });
+            });
+
+            // Star rating clicks
+            document.querySelectorAll('.star').forEach(star => {
+                star.addEventListener('click', function() {
+                    const question = this.dataset.question;
+                    const value = parseInt(this.dataset.value);
+                    
+                    feedbackData[question] = value;
+                    
+                    // Update star display
+                    document.querySelectorAll(`.star[data-question="${question}"]`).forEach(s => {
+                        const starValue = parseInt(s.dataset.value);
+                        if (starValue <= value) {
+                            s.classList.add('selected');
+                        } else {
+                            s.classList.remove('selected');
+                        }
+                    });
+                });
+            });
+
+            // Form submission
+            document.getElementById('feedbackForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Collect checkbox data
+                const features = [];
+                document.querySelectorAll('input[name="features"]:checked').forEach(cb => {
+                    features.push(cb.value);
+                });
+                feedbackData.features = features;
+                
+                // Collect text input data
+                feedbackData.improvements = document.querySelector('textarea[name="improvements"]').value;
+                feedbackData.concerns = document.querySelector('textarea[name="concerns"]').value;
+                
+                // Add timestamp
+                feedbackData.timestamp = new Date().toISOString();
+                
+                // Log to console (in production, this would send to a backend)
+                console.log('Feedback submitted:', feedbackData);
+                
+                // Store in localStorage
+                const existingFeedback = JSON.parse(localStorage.getItem('sentinelFeedback') || '[]');
+                existingFeedback.push(feedbackData);
+                localStorage.setItem('sentinelFeedback', JSON.stringify(existingFeedback));
+                
+                // Show success message
+                showFeedbackSuccess();
+            });
+        }
+
+        function showFeedbackSuccess() {
+            const content = document.getElementById('feedbackContent');
+            content.innerHTML = `
+                <div class="feedback-success">
+                    <h3>Thank you!</h3>
+                    <p>Your feedback helps us build a better tool for students and counselors.</p>
+                    <button class="btn" onclick="closeFeedback()">Close</button>
+                </div>
+            `;
+        }
     </script>
 </body>
 </html>
