@@ -3,216 +3,468 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sentinel - Mental Health Companion</title>
+    <title>Sentinel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --bg: #FDF6EE;
+            --bg2: #FAF0E4;
+            --surface: #FFFFFF;
+            --surface2: #FDF6EE;
+            --border: #E8D8C4;
+            --border-dark: #C8B49A;
+
+            --text: #2C1F0E;
+            --text-muted: #8A7060;
+            --text-dim: #C4A882;
+
+            --amber: #E8920A;
+            --amber-dim: #FEF3DC;
+            --amber-mid: #F5B84A;
+            --amber-border: #F0CC80;
+
+            --green: #3A8C3A;
+            --green-dim: #E8F5E8;
+            --green-border: #90C890;
+
+            --red: #C43030;
+            --red-dim: #FDEAEA;
+            --red-border: #F0A0A0;
+
+            --blue: #2070B8;
+            --blue-dim: #E8F2FC;
+            --blue-border: #90B8E8;
+
+            --sen-body: #F5C842;
+            --sen-dark: #C8920A;
+            --sen-cheek: #F0A060;
+            --sen-eye: #2C1F0E;
+            --sen-glow: rgba(245, 200, 66, 0.3);
         }
 
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: #f5f5f5;
-            padding: 0;
+            font-family: 'Nunito', sans-serif;
+            background: var(--bg2);
             min-height: 100vh;
         }
 
         .phone-frame {
             max-width: 400px;
             margin: 0 auto;
-            background: white;
+            background: var(--bg);
             min-height: 100vh;
+            position: relative;
         }
 
         .screen {
             display: none;
-            padding: 16px;
-            min-height: 667px;
-            padding-bottom: 80px;
+            padding: 20px 16px 100px;
+            animation: fadeIn 0.22s ease;
+        }
+        .screen.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .screen.active {
-            display: block;
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
         }
 
+        @keyframes glow-pulse {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.08); }
+        }
+
+        @keyframes blink {
+            0%, 90%, 100% { transform: scaleY(1); }
+            95% { transform: scaleY(0.1); }
+        }
+
+        /* ── SEN THE MASCOT (SVG inline) ── */
+        .sen-wrapper {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 4px;
+            position: relative;
+        }
+
+        .sen-svg {
+            animation: float 3.5s ease-in-out infinite;
+            filter: drop-shadow(0 6px 16px var(--sen-glow));
+        }
+
+        .sen-eyes { animation: blink 4s ease-in-out infinite; }
+
+        .sen-small {
+            width: 36px;
+            height: 36px;
+            flex-shrink: 0;
+        }
+
+        .sen-tiny {
+            width: 22px;
+            height: 22px;
+            flex-shrink: 0;
+        }
+
+        /* ── HEADER ── */
         .header {
-            padding: 12px 0 16px 0;
-            margin-bottom: 16px;
+            padding: 16px 0 8px;
+            text-align: center;
+        }
+
+        .app-wordmark {
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            margin-bottom: 8px;
         }
 
         .header h1 {
-            font-size: 32px;
-            font-weight: 700;
-            color: #000;
-            letter-spacing: -0.5px;
+            font-size: 26px;
+            font-weight: 900;
+            color: var(--text);
+            line-height: 1.2;
+            letter-spacing: -0.3px;
+        }
+
+        .header h1 span { color: var(--amber); }
+
+        .page-header {
+            padding: 8px 0 16px;
         }
 
         .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
             background: none;
             border: none;
-            color: #000;
-            font-size: 16px;
+            color: var(--text-muted);
+            font-family: 'Nunito', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
             cursor: pointer;
-            padding: 4px 0;
-            margin-bottom: 8px;
-            display: block;
+            padding: 0;
+            margin-bottom: 10px;
+        }
+        .back-btn:hover { color: var(--text); }
+
+        .page-header h1 {
+            font-size: 28px;
+            font-weight: 900;
+            color: var(--text);
+            letter-spacing: -0.3px;
+            line-height: 1.1;
         }
 
+        .page-header h1 span { color: var(--amber); }
+
+        /* ── CARDS ── */
         .card {
-            background: #fff;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            padding: 16px;
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: 18px;
+            padding: 18px;
             margin-bottom: 12px;
         }
 
-        .card h3 {
-            font-size: 17px;
-            font-weight: 600;
-            margin-bottom: 14px;
-            color: #000;
+        .card-label {
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            margin-bottom: 12px;
         }
 
         .card p {
-            font-size: 14px;
-            color: #666;
-            line-height: 1.4;
+            font-size: 13.5px;
+            color: var(--text-muted);
+            line-height: 1.6;
         }
 
+        /* ── METRICS ── */
         .metric {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid #f0f0f0;
+            padding: 11px 0;
+            border-bottom: 1.5px solid var(--border);
+        }
+        .metric:last-child { border-bottom: none; }
+
+        .metric-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        .metric:last-child {
-            border-bottom: none;
+        .metric-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            border: 2px solid var(--border);
+            background: var(--surface2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            flex-shrink: 0;
         }
 
         .metric-label {
-            font-size: 14px;
-            color: #333;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text);
         }
 
+        .metric-right { text-align: right; }
+
         .metric-value {
-            font-size: 16px;
-            font-weight: 600;
-            color: #000;
+            font-size: 15px;
+            font-weight: 900;
+            color: var(--text);
+            display: block;
         }
 
         .metric-change {
-            font-size: 12px;
-            margin-left: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            display: block;
+            margin-top: 1px;
+        }
+        .metric-change.down { color: var(--red); }
+        .metric-change.up { color: var(--green); }
+        .metric-change.warn { color: var(--amber); }
+
+        /* ── SEN SPEECH BUBBLES (insight boxes) ── */
+        .sen-bubble {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: 18px;
+            padding: 14px;
+            margin-bottom: 12px;
+            position: relative;
         }
 
-        .metric-change.down {
-            color: #dc2626;
+        .sen-bubble.amber { border-color: var(--amber-border); background: var(--amber-dim); }
+        .sen-bubble.green { border-color: var(--green-border); background: var(--green-dim); }
+        .sen-bubble.blue { border-color: var(--blue-border); background: var(--blue-dim); }
+        .sen-bubble.red { border-color: var(--red-border); background: var(--red-dim); }
+
+        .bubble-text {
+            flex: 1;
         }
 
-        .metric-change.up {
-            color: #16a34a;
+        .bubble-tag {
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 4px;
         }
 
-        .btn {
-            background: #000;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            padding: 12px;
-            font-size: 15px;
+        .sen-bubble.amber .bubble-tag { color: var(--amber); }
+        .sen-bubble.green .bubble-tag { color: var(--green); }
+        .sen-bubble.blue .bubble-tag { color: var(--blue); }
+        .sen-bubble.red .bubble-tag { color: var(--red); }
+
+        .bubble-text p {
+            font-size: 13.5px;
+            color: var(--text);
+            line-height: 1.55;
             font-weight: 500;
+        }
+
+        /* ── BUTTONS ── */
+        .btn {
+            border: none;
+            border-radius: 14px;
+            padding: 15px 20px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 15px;
+            font-weight: 800;
             cursor: pointer;
             width: 100%;
-            margin-top: 8px;
+            margin-top: 10px;
+            transition: all 0.12s ease;
         }
 
-        .btn:hover {
-            background: #333;
+        .btn-primary {
+            background: var(--amber);
+            color: #fff;
+            border-bottom: 4px solid var(--sen-dark);
+        }
+        .btn-primary:hover { filter: brightness(1.06); }
+        .btn-primary:active { border-bottom-width: 2px; transform: translateY(2px); }
+
+        .btn-ghost {
+            background: var(--surface);
+            color: var(--text);
+            border: 2px solid var(--border-dark);
+        }
+        .btn-ghost:hover { border-color: var(--amber); }
+
+        /* ── STAT PILLS ── */
+        .stat-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
         }
 
-        .btn-secondary {
-            background: white;
-            color: #000;
-            border: 1px solid #000;
+        .stat-pill {
+            flex: 1;
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            padding: 12px 8px;
+            text-align: center;
         }
 
-        .btn-secondary:hover {
-            background: #f5f5f5;
+        .stat-pill-num {
+            font-size: 20px;
+            font-weight: 900;
+            color: var(--text);
+            line-height: 1;
         }
 
-        .mood-options {
+        .stat-pill-label {
+            font-size: 9px;
+            font-weight: 800;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-top: 4px;
+        }
+
+        .stat-pill.amber { border-color: var(--amber-border); background: var(--amber-dim); }
+        .stat-pill.amber .stat-pill-num { color: var(--amber); }
+
+        /* ── MOOD GRID ── */
+        .mood-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin: 20px 0;
-        }
-
-        .mood-btn {
-            background: #fafafa;
-            border: 1px solid #e0e0e0;
-            border-radius: 6px;
-            padding: 16px 8px;
-            text-align: center;
-            cursor: pointer;
-        }
-
-        .mood-btn:active {
-            background: #f0f0f0;
-        }
-
-        .mood-emoji {
-            font-size: 28px;
-            margin-bottom: 6px;
-        }
-
-        .mood-label {
-            font-size: 12px;
-            color: #666;
-            font-weight: 500;
-        }
-
-        .insight-box {
-            background: #f9f9f9;
-            border-left: 2px solid #000;
-            padding: 12px;
+            gap: 8px;
             margin: 12px 0;
         }
 
-        .insight-box p {
+        .mood-btn {
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            padding: 14px 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.12s ease;
+        }
+
+        .mood-btn:hover {
+            border-color: var(--amber-border);
+            background: var(--amber-dim);
+            transform: translateY(-2px);
+        }
+
+        .mood-btn.selected {
+            border-color: var(--amber);
+            background: var(--amber-dim);
+            border-bottom-width: 4px;
+        }
+
+        .mood-emoji { font-size: 26px; margin-bottom: 5px; line-height: 1; }
+        .mood-label { font-size: 11px; font-weight: 700; color: var(--text-muted); }
+        .mood-btn.selected .mood-label { color: var(--amber); }
+
+        /* ── TAGS ── */
+        .tag-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 10px 0;
+        }
+
+        .tag-btn {
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: 50px;
+            padding: 8px 14px;
+            font-family: 'Nunito', sans-serif;
             font-size: 13px;
-            color: #333;
+            font-weight: 700;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.12s;
+        }
+
+        .tag-btn:hover { border-color: var(--amber-border); color: var(--text); }
+        .tag-btn.selected { border-color: var(--amber); background: var(--amber-dim); color: var(--amber); }
+
+        /* ── Q TEXT ── */
+        .q-text {
+            font-size: 18px;
+            font-weight: 900;
+            color: var(--text);
+            margin-bottom: 3px;
+            line-height: 1.25;
+        }
+
+        .q-sub {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        /* ── SESSION PREP ── */
+        .prep-item {
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            padding: 14px 16px;
+            margin-bottom: 10px;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .prep-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            margin-top: 5px;
+        }
+
+        .prep-item h4 {
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--text);
+            margin-bottom: 3px;
+        }
+
+        .prep-item p {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-muted);
             line-height: 1.5;
         }
 
-        .session-prep-item {
-            background: #fafafa;
-            border: 1px solid #e0e0e0;
-            border-radius: 6px;
-            padding: 14px;
-            margin-bottom: 10px;
-        }
-
-        .session-prep-item h4 {
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 6px;
-            color: #000;
-        }
-
-        .session-prep-item p {
-            font-size: 13px;
-            color: #666;
-            line-height: 1.4;
-        }
-
+        /* ── CONTACT CARDS ── */
         .contact-card {
-            background: #fafafa;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            padding: 14px;
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            padding: 14px 16px;
             margin-bottom: 10px;
             display: flex;
             align-items: center;
@@ -223,1165 +475,1072 @@
             width: 44px;
             height: 44px;
             border-radius: 50%;
-            background: #e5e5e5;
+            background: var(--surface2);
+            border: 2px solid var(--border);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #888;
-            font-weight: 600;
-            font-size: 24px;
+            font-size: 20px;
+            flex-shrink: 0;
         }
 
         .contact-info h4 {
             font-size: 15px;
-            font-weight: 600;
+            font-weight: 800;
+            color: var(--text);
             margin-bottom: 2px;
-            color: #000;
         }
 
         .contact-info p {
             font-size: 12px;
-            color: #666;
+            font-weight: 600;
+            color: var(--text-muted);
         }
 
+        .contact-badge {
+            margin-left: auto;
+            font-size: 9px;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 50px;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            border: 2px solid;
+            flex-shrink: 0;
+        }
+
+        .badge-weekly { background: var(--green-dim); color: var(--green); border-color: var(--green-border); }
+        .badge-alert { background: var(--amber-dim); color: var(--amber); border-color: var(--amber-border); }
+        .badge-full { background: var(--blue-dim); color: var(--blue); border-color: var(--blue-border); }
+
+        /* ── CHART LEGEND ── */
+        .chart-legend {
+            display: flex;
+            gap: 14px;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-top: 8px;
+        }
+        .legend-item { display: flex; align-items: center; gap: 5px; }
+
+        /* ── NAV BAR ── */
         .nav-bar {
             position: fixed;
             bottom: 0;
             left: 50%;
             transform: translateX(-50%);
-            max-width: 390px;
+            max-width: 400px;
             width: 100%;
-            background: white;
-            border-top: 1px solid #e0e0e0;
+            background: rgba(253, 246, 238, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 2px solid var(--border);
             display: flex;
             justify-content: space-around;
-            padding: 10px 0 20px 0;
+            padding: 8px 0 22px;
         }
 
         .nav-item {
             background: none;
             border: none;
-            color: #999;
-            font-size: 11px;
+            color: var(--text-dim);
+            font-family: 'Nunito', sans-serif;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
             cursor: pointer;
-            padding: 4px 12px;
+            padding: 4px 10px;
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 4px;
+            transition: color 0.12s;
         }
 
-        .nav-item.active {
-            color: #000;
-        }
+        .nav-item.active { color: var(--amber); }
+        .nav-item:hover { color: var(--text); }
+        .nav-icon { font-size: 18px; line-height: 1; }
 
-        .nav-icon {
-            font-size: 22px;
+        /* ── INLINE TAG PILLS ── */
+        .tag-inline {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 50px;
+            font-size: 11px;
+            font-weight: 800;
+            border: 2px solid;
+            margin: 2px 2px 0;
         }
+        .tag-stress { background: var(--red-dim); color: var(--red); border-color: var(--red-border); }
+        .tag-ok { background: var(--amber-dim); color: var(--amber); border-color: var(--amber-border); }
+        .tag-good { background: var(--green-dim); color: var(--green); border-color: var(--green-border); }
 
-        .question-text {
-            font-size: 18px;
-            font-weight: 600;
-            color: #000;
-            margin-bottom: 6px;
-        }
-
-        .question-subtext {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 20px;
-        }
-
-        .data-attribution {
+        /* ── FEEDBACK FAB ── */
+        .feedback-fab {
             position: fixed;
-            bottom: 60px;
-            left: 0;
-            right: 0;
-            text-align: center;
-            font-size: 10px;
-            color: #999;
-            padding: 8px;
-            background: rgba(255,255,255,0.9);
-        }
-
-        .chart-placeholder {
-            background: #f5f5f5;
-            border: 1px dashed #ccc;
-            border-radius: 6px;
-            padding: 50px 16px;
-            text-align: center;
-            color: #999;
-            font-size: 13px;
-            margin: 12px 0;
-            font-style: italic;
-        }
-
-        .feedback-btn {
-            position: fixed;
-            bottom: 80px;
-            right: 20px;
-            background: #000;
-            color: white;
+            bottom: 88px;
+            right: calc(50% - 200px + 14px);
+            background: var(--amber);
             border: none;
+            color: white;
             border-radius: 50%;
-            width: 56px;
-            height: 56px;
-            font-size: 24px;
+            width: 52px;
+            height: 52px;
+            font-size: 20px;
             cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
             z-index: 1000;
+            border-bottom: 4px solid var(--sen-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.12s;
         }
 
-        .feedback-btn:hover {
-            background: #333;
-        }
+        .feedback-fab:hover { filter: brightness(1.06); }
+        .feedback-fab:active { border-bottom-width: 2px; transform: translateY(2px); }
 
+        /* ── FEEDBACK MODAL ── */
         .feedback-modal {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.5);
+            inset: 0;
+            background: rgba(44, 31, 14, 0.4);
             z-index: 2000;
             justify-content: center;
-            align-items: center;
-            padding: 20px;
+            align-items: flex-end;
         }
+        .feedback-modal.active { display: flex; }
 
-        .feedback-modal.active {
-            display: flex;
-        }
-
-        .feedback-content {
-            background: white;
-            border-radius: 12px;
-            padding: 24px;
-            max-width: 500px;
+        .feedback-sheet {
+            background: var(--bg);
+            border-radius: 24px 24px 0 0;
+            border: 2px solid var(--border);
+            border-bottom: none;
+            padding: 20px 20px 40px;
             width: 100%;
-            max-height: 90vh;
+            max-width: 400px;
+            max-height: 92vh;
             overflow-y: auto;
+            animation: sheetUp 0.25s ease;
         }
 
-        .feedback-content h2 {
-            font-size: 24px;
-            margin-bottom: 8px;
-            color: #000;
+        @keyframes sheetUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
         }
 
-        .feedback-content p {
-            font-size: 14px;
-            color: #666;
+        .sheet-handle {
+            width: 36px;
+            height: 4px;
+            background: var(--border-dark);
+            border-radius: 2px;
+            margin: 0 auto 16px;
+        }
+
+        .sheet-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 6px;
+        }
+
+        .feedback-sheet h2 {
+            font-size: 20px;
+            font-weight: 900;
+            color: var(--text);
+        }
+
+        .feedback-sheet > p {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-muted);
             margin-bottom: 20px;
         }
 
-        .feedback-question {
-            margin-bottom: 24px;
-        }
+        .fb-q { margin-bottom: 24px; }
 
-        .feedback-question label {
+        .fb-q label {
             display: block;
-            font-size: 15px;
-            font-weight: 600;
-            color: #000;
-            margin-bottom: 12px;
-        }
-
-        .emoji-options {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-        }
-
-        .emoji-option {
-            background: #fafafa;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            padding: 12px 16px;
-            cursor: pointer;
-            font-size: 32px;
-            transition: all 0.2s;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .emoji-text {
-            font-size: 12px;
-            font-weight: 500;
-            color: #666;
-        }
-
-        .emoji-option:hover {
-            border-color: #000;
-            background: white;
-        }
-
-        .emoji-option.selected {
-            border-color: #000;
-            background: #f0f0f0;
-        }
-
-        .checkbox-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .checkbox-option {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-        }
-
-        .checkbox-option input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
-        }
-
-        .checkbox-option label {
             font-size: 14px;
-            font-weight: 400;
-            color: #333;
-            cursor: pointer;
-            margin: 0;
+            font-weight: 800;
+            color: var(--text);
+            margin-bottom: 10px;
         }
 
-        .star-rating {
+        .emoji-opts {
             display: flex;
             gap: 8px;
-            justify-content: center;
         }
+
+        .emoji-opt {
+            flex: 1;
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 12px 6px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.12s;
+        }
+
+        .emoji-opt span:first-child { font-size: 24px; }
+
+        .emoji-opt-label {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        .emoji-opt:hover { border-color: var(--amber-border); background: var(--amber-dim); }
+        .emoji-opt.selected { border-color: var(--amber); background: var(--amber-dim); }
+        .emoji-opt.selected .emoji-opt-label { color: var(--amber); }
+
+        .check-group { display: flex; flex-direction: column; gap: 8px; }
+
+        .check-opt {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 11px 14px;
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: border-color 0.12s;
+        }
+
+        .check-opt:has(input:checked) { border-color: var(--amber); background: var(--amber-dim); }
+        .check-opt input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--amber); cursor: pointer; }
+        .check-opt label { font-size: 13px; font-weight: 600; color: var(--text-muted); cursor: pointer; margin: 0; }
+        .check-opt:has(input:checked) label { color: var(--text); }
+
+        .star-row { display: flex; gap: 8px; justify-content: center; }
 
         .star {
-            font-size: 32px;
+            font-size: 30px;
             cursor: pointer;
-            color: #e0e0e0;
-            transition: color 0.2s;
+            color: var(--border-dark);
+            transition: color 0.1s, transform 0.1s;
         }
+        .star:hover, .star.selected { color: var(--amber-mid); }
+        .star:hover { transform: scale(1.15); }
 
-        .star:hover,
-        .star.selected {
-            color: #fbbf24;
-        }
-
-        .text-input {
+        .fb-textarea {
             width: 100%;
-            padding: 12px;
-            border: 1px solid #e0e0e0;
-            border-radius: 6px;
+            padding: 12px 14px;
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-family: 'Nunito', sans-serif;
             font-size: 14px;
-            font-family: inherit;
+            color: var(--text);
             resize: vertical;
-            min-height: 80px;
+            min-height: 76px;
         }
+        .fb-textarea::placeholder { color: var(--text-dim); }
+        .fb-textarea:focus { outline: none; border-color: var(--amber); }
 
-        .text-input:focus {
-            outline: none;
-            border-color: #000;
-        }
+        .fb-btns { display: flex; gap: 10px; margin-top: 18px; }
 
-        .feedback-buttons {
-            display: flex;
-            gap: 12px;
-            margin-top: 24px;
-        }
-
-        .feedback-submit {
+        .fb-submit {
             flex: 1;
-            background: #000;
+            background: var(--amber);
             color: white;
             border: none;
-            border-radius: 6px;
+            border-bottom: 4px solid var(--sen-dark);
+            border-radius: 12px;
             padding: 14px;
+            font-family: 'Nunito', sans-serif;
             font-size: 15px;
-            font-weight: 600;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.12s;
+        }
+        .fb-submit:active { border-bottom-width: 2px; transform: translateY(2px); }
+
+        .fb-cancel {
+            background: transparent;
+            color: var(--text-muted);
+            border: 2px solid var(--border-dark);
+            border-radius: 12px;
+            padding: 14px 16px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
             cursor: pointer;
         }
+        .fb-cancel:hover { border-color: var(--text-muted); }
 
-        .feedback-submit:hover {
-            background: #333;
-        }
-
-        .feedback-cancel {
-            background: white;
-            color: #000;
-            border: 1px solid #000;
-            border-radius: 6px;
-            padding: 14px 24px;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        .feedback-cancel:hover {
-            background: #f5f5f5;
-        }
-
-        .feedback-success {
+        .fb-success {
             text-align: center;
-            padding: 40px 20px;
+            padding: 32px 16px;
         }
-
-        .feedback-success h3 {
-            font-size: 20px;
-            margin-bottom: 8px;
-            color: #000;
+        .fb-success h3 {
+            font-size: 22px;
+            font-weight: 900;
+            color: var(--text);
+            margin: 12px 0 8px;
         }
-
-        .feedback-success p {
-            color: #666;
+        .fb-success p {
+            color: var(--text-muted);
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 1.55;
             margin-bottom: 20px;
+        }
+
+        .attribution {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--text-dim);
+            text-align: center;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            margin-top: 14px;
         }
     </style>
 </head>
 <body>
-    <div class="phone-frame">
-        
-        <!-- HOME SCREEN -->
-        <div class="screen active" id="home">
-            <div class="header">
-                <h1>Sentinel</h1>
-            </div>
+<div class="phone-frame">
 
-            <div class="card">
-                <h3>Your Week at a Glance</h3>
-                <div class="metric">
-                    <span class="metric-label">Average Sleep</span>
-                    <span>
-                        <span class="metric-value" data-metric="sleep-value">6h 42m</span>
-                        <span class="metric-change up" data-metric="sleep-change">↑ 0h 6m</span>
-                    </span>
-                </div>
-                <div class="metric">
-                    <span class="metric-label">Resting Heart Rate</span>
-                    <span>
-                        <span class="metric-value" data-metric="heartrate-value">66 BPM</span>
-                        <span class="metric-change down" data-metric="heartrate-change">↓ 19.1</span>
-                    </span>
-                </div>
-                <div class="metric">
-                    <span class="metric-label">Daily Activity</span>
-                    <span>
-                        <span class="metric-value" data-metric="steps-value">4,780 steps</span>
-                        <span class="metric-change down" data-metric="steps-change">↓ 2,361</span>
-                    </span>
-                </div>
-                <div class="metric">
-                    <span class="metric-label">Screen Time</span>
-                    <span>
-                        <span class="metric-value" data-metric="screen-value">7h 30m</span>
-                        <span class="metric-change up" data-metric="screen-change">↑ 2h 0m</span>
-                    </span>
-                </div>
-            </div>
+    <!-- ─────────────── HOME ─────────────── -->
+    <div class="screen active" id="home">
+        <div class="header">
+            <div class="app-wordmark">Sentinel</div>
 
-            <div class="insight-box">
-                <p><strong>Notice anything?</strong> Your resting heart rate has dropped significantly (19 BPM lower), while your activity has also decreased. Changes in heart rate can relate to stress levels, fitness, or recovery.</p>
-            </div>
-
-            <div class="insight-box" style="background: #fff9e6; border-left-color: #f59e0b;">
-                <p><strong>Context check:</strong> Your heart rate was elevated on Wednesday (97.6 BPM) - you also mentioned having an exam that day. How did it go? Everything settled now?</p>
-            </div>
-
-            <button class="btn" onclick="showScreen('checkin')">Complete Today's Check-in</button>
-            <button class="btn btn-secondary" onclick="showScreen('weekly')">View Weekly Summary</button>
-
-            <div class="data-attribution">
-                Prototype using real smartwatch data from Kaggle
-            </div>
-
-            <div class="nav-bar">
-                <button class="nav-item active" onclick="showScreen('home')">
-                    <div class="nav-icon">●</div>
-                    <div>Home</div>
-                </button>
-                <button class="nav-item" onclick="showScreen('weekly')">
-                    <div class="nav-icon">▢</div>
-                    <div>Weekly</div>
-                </button>
-                <button class="nav-item" onclick="showScreen('session')">
-                    <div class="nav-icon">✎</div>
-                    <div>Session</div>
-                </button>
-                <button class="nav-item" onclick="showScreen('circle')">
-                    <div class="nav-icon">◯</div>
-                    <div>Circle</div>
-                </button>
-            </div>
-        </div>
-
-        <!-- DAILY CHECK-IN SCREEN -->
-        <div class="screen" id="checkin">
-            <div class="header">
-                <button class="back-btn" onclick="showScreen('home')">← Back</button>
-                <h1>Daily Check-in</h1>
-            </div>
-
-            <p class="question-text">How are you feeling today?</p>
-            <p class="question-subtext">Just a quick check - takes 10 seconds</p>
-
-            <div class="insight-box" style="background: #fff9e6; border-left-color: #f59e0b; margin-bottom: 16px;">
-                <p><strong>We noticed:</strong> Your heart rate was higher than usual on Wednesday (97.6 BPM), and you mentioned having an exam. How did it go?</p>
-            </div>
-
-            <div class="mood-options">
-                <div class="mood-btn">
-                    <div class="mood-emoji">:)</div>
-                    <div class="mood-label">Great</div>
-                </div>
-                <div class="mood-btn">
-                    <div class="mood-emoji">:)</div>
-                    <div class="mood-label">Good</div>
-                </div>
-                <div class="mood-btn">
-                    <div class="mood-emoji">:|</div>
-                    <div class="mood-label">Okay</div>
-                </div>
-                <div class="mood-btn">
-                    <div class="mood-emoji">:/</div>
-                    <div class="mood-label">Not great</div>
-                </div>
-                <div class="mood-btn">
-                    <div class="mood-emoji">:(</div>
-                    <div class="mood-label">Struggling</div>
-                </div>
-                <div class="mood-btn">
-                    <div class="mood-emoji">:(</div>
-                    <div class="mood-label">Really bad</div>
-                </div>
-            </div>
-
-            <p class="question-text" style="margin-top: 32px;">Anything specific on your mind?</p>
-            <p class="question-subtext">Optional - helps add context</p>
-
-            <div class="mood-options" style="grid-template-columns: repeat(2, 1fr);">
-                <div class="mood-btn">
-                    <div class="mood-label">Exams/Deadlines</div>
-                </div>
-                <div class="mood-btn">
-                    <div class="mood-label">Social stress</div>
-                </div>
-                <div class="mood-btn">
-                    <div class="mood-label">Family issues</div>
-                </div>
-                <div class="mood-btn">
-                    <div class="mood-label">Feeling lonely</div>
-                </div>
-                <div class="mood-btn">
-                    <div class="mood-label">Physical health</div>
-                </div>
-                <div class="mood-btn">
-                    <div class="mood-label">Nothing specific</div>
-                </div>
-            </div>
-
-            <button class="btn" onclick="showScreen('home')" style="margin-top: 32px;">Submit Check-in</button>
-        </div>
-
-        <!-- WEEKLY SUMMARY SCREEN -->
-        <div class="screen" id="weekly">
-            <div class="header">
-                <button class="back-btn" onclick="showScreen('home')">← Back</button>
-                <h1>Weekly Summary</h1>
-            </div>
-
-            <div class="card">
-                <h3>Sleep Patterns</h3>
-                <svg viewBox="0 0 320 120" style="width: 100%; height: 120px; margin: 12px 0;">
-                    <!-- Grid lines -->
-                    <line x1="40" y1="20" x2="310" y2="20" stroke="#f0f0f0" stroke-width="1"/>
-                    <line x1="40" y1="45" x2="310" y2="45" stroke="#f0f0f0" stroke-width="1"/>
-                    <line x1="40" y1="70" x2="310" y2="70" stroke="#f0f0f0" stroke-width="1"/>
-                    <line x1="40" y1="95" x2="310" y2="95" stroke="#f0f0f0" stroke-width="1"/>
-                    
-                    <!-- Y-axis labels -->
-                    <text x="5" y="25" font-size="10" fill="#999">10h</text>
-                    <text x="10" y="50" font-size="10" fill="#999">8h</text>
-                    <text x="10" y="75" font-size="10" fill="#999">6h</text>
-                    <text x="10" y="100" font-size="10" fill="#999">4h</text>
-                    
-                    <!-- Week 1 line (baseline) - dashed -->
-                    <polyline
-                        points="50,38 88,82 126,35 164,88 202,20 240,67 278,26"
-                        fill="none"
-                        stroke="#ccc"
-                        stroke-width="2"
-                        stroke-dasharray="4,4"/>
-                    
-                    <!-- Week 2 line (current) - solid -->
-                    <polyline
-                        points="50,30 88,38 126,38 164,50 202,47 240,35 278,66"
-                        fill="none"
-                        stroke="#000"
-                        stroke-width="2.5"/>
-                    
-                    <!-- Week 2 data points -->
-                    <circle cx="50" cy="30" r="3" fill="#000"/>
-                    <circle cx="88" cy="38" r="3" fill="#000"/>
-                    <circle cx="126" cy="38" r="3" fill="#000"/>
-                    <circle cx="164" cy="50" r="3" fill="#000"/>
-                    <circle cx="202" cy="47" r="3" fill="#000"/>
-                    <circle cx="240" cy="35" r="3" fill="#000"/>
-                    <circle cx="278" cy="66" r="3" fill="#000"/>
-                    
-                    <!-- X-axis labels -->
-                    <text x="45" y="115" font-size="9" fill="#999">Mon</text>
-                    <text x="83" y="115" font-size="9" fill="#999">Tue</text>
-                    <text x="120" y="115" font-size="9" fill="#999">Wed</text>
-                    <text x="160" y="115" font-size="9" fill="#999">Thu</text>
-                    <text x="200" y="115" font-size="9" fill="#999">Fri</text>
-                    <text x="237" y="115" font-size="9" fill="#999">Sat</text>
-                    <text x="274" y="115" font-size="9" fill="#999">Sun</text>
+            <!-- SEN — big version, home screen -->
+            <div class="sen-wrapper">
+                <svg class="sen-svg" width="90" height="100" viewBox="0 0 90 100" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Glow -->
+                    <ellipse cx="45" cy="96" rx="28" ry="6" fill="rgba(245,200,66,0.18)"/>
+                    <!-- Cape / cloak -->
+                    <ellipse cx="45" cy="72" rx="30" ry="20" fill="#C8920A" opacity="0.35"/>
+                    <!-- Body -->
+                    <ellipse cx="45" cy="58" rx="26" ry="28" fill="var(--sen-body)"/>
+                    <!-- Belly shine -->
+                    <ellipse cx="40" cy="50" rx="10" ry="12" fill="rgba(255,255,255,0.25)"/>
+                    <!-- Cheeks -->
+                    <circle cx="24" cy="58" r="7" fill="var(--sen-cheek)" opacity="0.55"/>
+                    <circle cx="66" cy="58" r="7" fill="var(--sen-cheek)" opacity="0.55"/>
+                    <!-- Eyes group (blink animated) -->
+                    <g class="sen-eyes">
+                        <ellipse cx="36" cy="50" rx="5" ry="6" fill="var(--sen-eye)"/>
+                        <ellipse cx="54" cy="50" rx="5" ry="6" fill="var(--sen-eye)"/>
+                        <!-- Shine dots -->
+                        <circle cx="38" cy="48" r="2" fill="white"/>
+                        <circle cx="56" cy="48" r="2" fill="white"/>
+                    </g>
+                    <!-- Tiny smile -->
+                    <path d="M39 60 Q45 65 51 60" stroke="var(--sen-dark)" stroke-width="2" fill="none" stroke-linecap="round"/>
+                    <!-- Lantern arm left -->
+                    <line x1="20" y1="58" x2="8" y2="70" stroke="var(--sen-dark)" stroke-width="3" stroke-linecap="round"/>
+                    <!-- Lantern body -->
+                    <rect x="2" y="68" width="12" height="14" rx="3" fill="#F5C842" stroke="var(--sen-dark)" stroke-width="1.5"/>
+                    <rect x="5" y="70" width="6" height="10" rx="2" fill="rgba(255,240,150,0.8)"/>
+                    <!-- Lantern glow -->
+                    <ellipse cx="8" cy="82" rx="7" ry="3" fill="rgba(245,200,66,0.3)" style="animation: glow-pulse 2s ease-in-out infinite;"/>
+                    <!-- Shield right arm -->
+                    <line x1="70" y1="58" x2="82" y2="66" stroke="var(--sen-dark)" stroke-width="3" stroke-linecap="round"/>
+                    <path d="M76 62 L88 62 L88 74 Q82 80 76 76 Q70 80 70 74 Z" fill="var(--amber)" stroke="var(--sen-dark)" stroke-width="1.5"/>
+                    <path d="M79 65 L83 69 L79 73" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                    <!-- Tiny ears/horns -->
+                    <ellipse cx="30" cy="30" rx="5" ry="7" fill="var(--sen-body)" stroke="var(--sen-dark)" stroke-width="1"/>
+                    <ellipse cx="60" cy="30" rx="5" ry="7" fill="var(--sen-body)" stroke="var(--sen-dark)" stroke-width="1"/>
                 </svg>
-                <p style="font-size: 11px; color: #999; margin-top: 4px;">
-                    <span style="display: inline-block; width: 12px; height: 2px; background: #000; margin-right: 4px; vertical-align: middle;"></span> This week
-                    <span style="display: inline-block; width: 12px; height: 2px; background: #ccc; margin: 0 4px 0 12px; vertical-align: middle; border-top: 2px dashed #ccc;"></span> Last week
-                </p>
-                <p>Your sleep stayed relatively stable this week (6.7 hours average), but individual nights varied significantly - from 5.7 to 7.6 hours.</p>
             </div>
 
-            <div class="card">
-                <h3>Resting Heart Rate</h3>
-                <svg viewBox="0 0 320 120" style="width: 100%; height: 120px; margin: 12px 0;">
-                    <!-- Grid lines -->
-                    <line x1="40" y1="20" x2="310" y2="20" stroke="#f0f0f0" stroke-width="1"/>
-                    <line x1="40" y1="40" x2="310" y2="40" stroke="#f0f0f0" stroke-width="1"/>
-                    <line x1="40" y1="60" x2="310" y2="60" stroke="#f0f0f0" stroke-width="1"/>
-                    <line x1="40" y1="80" x2="310" y2="80" stroke="#f0f0f0" stroke-width="1"/>
-                    <line x1="40" y1="100" x2="310" y2="100" stroke="#f0f0f0" stroke-width="1"/>
-                    
-                    <!-- Y-axis labels -->
-                    <text x="5" y="25" font-size="10" fill="#999">110</text>
-                    <text x="10" y="45" font-size="10" fill="#999">90</text>
-                    <text x="10" y="65" font-size="10" fill="#999">70</text>
-                    <text x="10" y="85" font-size="10" fill="#999">50</text>
-                    
-                    <!-- Week 1 line (baseline) - dashed -->
-                    <polyline
-                        points="50,43 88,60 126,35 164,66 202,40 240,25 278,47"
-                        fill="none"
-                        stroke="#ccc"
-                        stroke-width="2"
-                        stroke-dasharray="4,4"/>
-                    
-                    <!-- Week 2 line (current) - solid -->
-                    <polyline
-                        points="50,72 88,55 126,63 164,63 202,61 240,53 278,70"
-                        fill="none"
-                        stroke="#000"
-                        stroke-width="2.5"/>
-                    
-                    <!-- Week 2 data points -->
-                    <circle cx="50" cy="72" r="3" fill="#000"/>
-                    <circle cx="88" cy="55" r="3" fill="#000"/>
-                    <circle cx="126" cy="63" r="3" fill="#000"/>
-                    <circle cx="164" cy="63" r="3" fill="#000"/>
-                    <circle cx="202" cy="61" r="3" fill="#000"/>
-                    <circle cx="240" cy="53" r="3" fill="#000"/>
-                    <circle cx="278" cy="70" r="3" fill="#000"/>
-                    
-                    <!-- X-axis labels -->
-                    <text x="45" y="115" font-size="9" fill="#999">Mon</text>
-                    <text x="83" y="115" font-size="9" fill="#999">Tue</text>
-                    <text x="120" y="115" font-size="9" fill="#999">Wed</text>
-                    <text x="160" y="115" font-size="9" fill="#999">Thu</text>
-                    <text x="200" y="115" font-size="9" fill="#999">Fri</text>
-                    <text x="237" y="115" font-size="9" fill="#999">Sat</text>
-                    <text x="274" y="115" font-size="9" fill="#999">Sun</text>
-                </svg>
-                <p style="font-size: 11px; color: #999; margin-top: 4px;">
-                    <span style="display: inline-block; width: 12px; height: 2px; background: #000; margin-right: 4px; vertical-align: middle;"></span> This week
-                    <span style="display: inline-block; width: 12px; height: 2px; background: #ccc; margin: 0 4px 0 12px; vertical-align: middle; border-top: 2px dashed #ccc;"></span> Last week
-                </p>
-                <p>Your resting heart rate decreased by 19.1 BPM this week (from 85.6 to 66.4). This could indicate improved recovery, reduced stress, or changes in activity patterns.</p>
-            </div>
-
-            <div class="card">
-                <h3>Activity Levels</h3>
-                <svg viewBox="0 0 320 120" style="width: 100%; height: 120px; margin: 12px 0;">
-                    <!-- Grid lines -->
-                    <line x1="40" y1="20" x2="310" y2="20" stroke="#f0f0f0" stroke-width="1"/>
-                    <line x1="40" y1="40" x2="310" y2="40" stroke="#f0f0f0" stroke-width="1"/>
-                    <line x1="40" y1="60" x2="310" y2="60" stroke="#f0f0f0" stroke-width="1"/>
-                    <line x1="40" y1="80" x2="310" y2="80" stroke="#f0f0f0" stroke-width="1"/>
-                    <line x1="40" y1="100" x2="310" y2="100" stroke="#f0f0f0" stroke-width="1"/>
-                    
-                    <!-- Y-axis labels -->
-                    <text x="2" y="25" font-size="10" fill="#999">16k</text>
-                    <text x="2" y="45" font-size="10" fill="#999">12k</text>
-                    <text x="5" y="65" font-size="10" fill="#999">8k</text>
-                    <text x="5" y="85" font-size="10" fill="#999">4k</text>
-                    <text x="13" y="105" font-size="10" fill="#999">0</text>
-                    
-                    <!-- Week 1 line (baseline) - dashed -->
-                    <polyline
-                        points="50,98 88,95 126,82 164,75 202,35 240,30 278,85"
-                        fill="none"
-                        stroke="#ccc"
-                        stroke-width="2"
-                        stroke-dasharray="4,4"/>
-                    
-                    <!-- Week 2 line (current) - solid -->
-                    <polyline
-                        points="50,88 88,92 126,60 164,73 202,64 240,71 278,99"
-                        fill="none"
-                        stroke="#000"
-                        stroke-width="2.5"/>
-                    
-                    <!-- Week 2 data points -->
-                    <circle cx="50" cy="88" r="3" fill="#000"/>
-                    <circle cx="88" cy="92" r="3" fill="#000"/>
-                    <circle cx="126" cy="60" r="3" fill="#000"/>
-                    <circle cx="164" cy="73" r="3" fill="#000"/>
-                    <circle cx="202" cy="64" r="3" fill="#000"/>
-                    <circle cx="240" cy="71" r="3" fill="#000"/>
-                    <circle cx="278" cy="99" r="3" fill="#000"/>
-                    
-                    <!-- X-axis labels -->
-                    <text x="45" y="115" font-size="9" fill="#999">Mon</text>
-                    <text x="83" y="115" font-size="9" fill="#999">Tue</text>
-                    <text x="120" y="115" font-size="9" fill="#999">Wed</text>
-                    <text x="160" y="115" font-size="9" fill="#999">Thu</text>
-                    <text x="200" y="115" font-size="9" fill="#999">Fri</text>
-                    <text x="237" y="115" font-size="9" fill="#999">Sat</text>
-                    <text x="274" y="115" font-size="9" fill="#999">Sun</text>
-                </svg>
-                <p style="font-size: 11px; color: #999; margin-top: 4px;">
-                    <span style="display: inline-block; width: 12px; height: 2px; background: #000; margin-right: 4px; vertical-align: middle;"></span> This week
-                    <span style="display: inline-block; width: 12px; height: 2px; background: #ccc; margin: 0 4px 0 12px; vertical-align: middle; border-top: 2px dashed #ccc;"></span> Last week
-                </p>
-                <p>You're moving about 2,361 fewer steps per day than last week. Your activity has been more consistent but at a lower baseline.</p>
-            </div>
-
-            <div class="card">
-                <h3>Mood & Stress Tracking</h3>
-                
-                <!-- Container for side-by-side graphs -->
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 12px 0;">
-                    
-                    <!-- Stress Level Line Graph (Left) -->
-                    <div>
-                        <p style="font-size: 12px; font-weight: 600; margin-bottom: 8px; color: #666;">Stress Level</p>
-                        <svg viewBox="0 0 160 100" style="width: 100%; height: 100px;">
-                            <!-- Grid lines -->
-                            <line x1="20" y1="15" x2="150" y2="15" stroke="#f0f0f0" stroke-width="1"/>
-                            <line x1="20" y1="35" x2="150" y2="35" stroke="#f0f0f0" stroke-width="1"/>
-                            <line x1="20" y1="55" x2="150" y2="55" stroke="#f0f0f0" stroke-width="1"/>
-                            <line x1="20" y1="75" x2="150" y2="75" stroke="#f0f0f0" stroke-width="1"/>
-                            
-                            <!-- Y-axis labels -->
-                            <text x="5" y="19" font-size="9" fill="#999">10</text>
-                            <text x="8" y="39" font-size="9" fill="#999">7</text>
-                            <text x="8" y="59" font-size="9" fill="#999">4</text>
-                            <text x="8" y="79" font-size="9" fill="#999">1</text>
-                            
-                            <!-- Stress line -->
-                            <polyline
-                                points="28,55 46,51 64,15 82,35 100,75 118,51 136,75"
-                                fill="none"
-                                stroke="#dc2626"
-                                stroke-width="2"/>
-                            
-                            <!-- Data points -->
-                            <circle cx="28" cy="55" r="2.5" fill="#dc2626"/>
-                            <circle cx="46" cy="51" r="2.5" fill="#dc2626"/>
-                            <circle cx="64" cy="15" r="2.5" fill="#dc2626"/>
-                            <circle cx="82" cy="35" r="2.5" fill="#dc2626"/>
-                            <circle cx="100" cy="75" r="2.5" fill="#dc2626"/>
-                            <circle cx="118" cy="51" r="2.5" fill="#dc2626"/>
-                            <circle cx="136" cy="75" r="2.5" fill="#dc2626"/>
-                            
-                            <!-- X-axis labels -->
-                            <text x="24" y="93" font-size="8" fill="#999">M</text>
-                            <text x="43" y="93" font-size="8" fill="#999">T</text>
-                            <text x="61" y="93" font-size="8" fill="#999">W</text>
-                            <text x="79" y="93" font-size="8" fill="#999">T</text>
-                            <text x="98" y="93" font-size="8" fill="#999">F</text>
-                            <text x="115" y="93" font-size="8" fill="#999">S</text>
-                            <text x="133" y="93" font-size="8" fill="#999">S</text>
-                        </svg>
-                    </div>
-                    
-                    <!-- Mood Calendar Heatmap (Right) -->
-                    <div>
-                        <p style="font-size: 12px; font-weight: 600; margin-bottom: 8px; color: #666;">Daily Mood</p>
-                        <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-top: 12px;">
-                            <!-- Monday - Okay -->
-                            <div style="text-align: center;">
-                                <div style="width: 100%; aspect-ratio: 1; background: #fbbf24; border-radius: 4px; margin-bottom: 4px;"></div>
-                                <span style="font-size: 7px; color: #999;">M</span>
-                            </div>
-                            <!-- Tuesday - Okay -->
-                            <div style="text-align: center;">
-                                <div style="width: 100%; aspect-ratio: 1; background: #fbbf24; border-radius: 4px; margin-bottom: 4px;"></div>
-                                <span style="font-size: 7px; color: #999;">T</span>
-                            </div>
-                            <!-- Wednesday - Struggling -->
-                            <div style="text-align: center;">
-                                <div style="width: 100%; aspect-ratio: 1; background: #dc2626; border-radius: 4px; margin-bottom: 4px;"></div>
-                                <span style="font-size: 7px; color: #999;">W</span>
-                            </div>
-                            <!-- Thursday - Not great -->
-                            <div style="text-align: center;">
-                                <div style="width: 100%; aspect-ratio: 1; background: #f97316; border-radius: 4px; margin-bottom: 4px;"></div>
-                                <span style="font-size: 7px; color: #999;">T</span>
-                            </div>
-                            <!-- Friday - Great -->
-                            <div style="text-align: center;">
-                                <div style="width: 100%; aspect-ratio: 1; background: #22c55e; border-radius: 4px; margin-bottom: 4px;"></div>
-                                <span style="font-size: 7px; color: #999;">F</span>
-                            </div>
-                            <!-- Saturday - Okay -->
-                            <div style="text-align: center;">
-                                <div style="width: 100%; aspect-ratio: 1; background: #fbbf24; border-radius: 4px; margin-bottom: 4px;"></div>
-                                <span style="font-size: 7px; color: #999;">S</span>
-                            </div>
-                            <!-- Sunday - Great -->
-                            <div style="text-align: center;">
-                                <div style="width: 100%; aspect-ratio: 1; background: #22c55e; border-radius: 4px; margin-bottom: 4px;"></div>
-                                <span style="font-size: 7px; color: #999;">S</span>
-                            </div>
-                        </div>
-                        <div style="display: flex; gap: 8px; margin-top: 12px; font-size: 9px; color: #999;">
-                            <div><span style="display: inline-block; width: 8px; height: 8px; background: #22c55e; border-radius: 2px; margin-right: 3px;"></span>Great</div>
-                            <div><span style="display: inline-block; width: 8px; height: 8px; background: #fbbf24; border-radius: 2px; margin-right: 3px;"></span>Okay</div>
-                            <div><span style="display: inline-block; width: 8px; height: 8px; background: #f97316; border-radius: 2px; margin-right: 3px;"></span>Not great</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <p>You've checked in 6 out of 7 days. Most common feelings: "Okay" (3 days), "Great" (2 days). Common stressors: Exams/Deadlines, Feeling lonely. Stress peaked on Wednesday (10/10) - the same day you mentioned having an exam.</p>
-            </div>
-
-            <button class="btn" onclick="showScreen('session')">Prepare for Next Session</button>
+            <h1>Hey! How are <br><span>you doing today? </span></h1>
         </div>
 
-        <!-- SESSION PREP SCREEN -->
-        <div class="screen" id="session">
-            <div class="header">
-                <button class="back-btn" onclick="showScreen('home')">← Back</button>
-                <h1>Session Prep</h1>
+        <div class="stat-row">
+            <div class="stat-pill amber">
+                <div class="stat-pill-num">6</div>
+                <div class="stat-pill-label">Day streak 🔥</div>
             </div>
-
-            <p class="question-subtext" style="margin-bottom: 24px;">Key changes to discuss with your counselor</p>
-
-            <div class="session-prep-item">
-                <h4>Resting heart rate dropped significantly</h4>
-                <p>Down 19.1 BPM this week (from 85.6 to 66.4). This is a notable change that could relate to reduced stress, better recovery, or changes in fitness/activity.</p>
+            <div class="stat-pill">
+                <div class="stat-pill-num">3</div>
+                <div class="stat-pill-label">Days to session</div>
             </div>
-
-            <div class="session-prep-item">
-                <h4>Activity has decreased significantly</h4>
-                <p>Down 2,361 steps/day this week (from 7,141 to 4,780). Your daily movement has been more consistent but at a lower overall level.</p>
-            </div>
-
-            <div class="session-prep-item">
-                <h4>Sleep patterns more variable</h4>
-                <p>While your average sleep stayed around 6.7 hours, individual nights ranged from 5.7 to 7.6 hours - more inconsistent than usual.</p>
-            </div>
-
-            <div class="session-prep-item">
-                <h4>Screen time increased</h4>
-                <p>Up 2 hours/day (from 5.5h to 7.5h). Most time spent on social media and YouTube.</p>
-            </div>
-
-            <div class="session-prep-item">
-                <h4>Mood trending lower</h4>
-                <p>Most common check-in: "Not great" (3/6 days). Main stressors: upcoming exams and feeling lonely.</p>
-            </div>
-
-            <div class="insight-box">
-                <p><strong>Pattern noticed:</strong> Your heart rate drop coincides with reduced activity - this might indicate you're less physically active or potentially recovering from stress. Worth discussing how you're feeling physically.</p>
-            </div>
-
-            <button class="btn">Share This Summary</button>
-            <button class="btn btn-secondary" onclick="showScreen('home')">Done</button>
-        </div>
-
-        <!-- CARE CIRCLE SCREEN -->
-        <div class="screen" id="circle">
-            <div class="header">
-                <button class="back-btn" onclick="showScreen('home')">← Back</button>
-                <h1>Care Circle</h1>
-            </div>
-
-            <p class="question-subtext" style="margin-bottom: 24px;">People you trust with your wellbeing updates</p>
-
-            <div class="contact-card">
-                <div class="contact-avatar">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                        <circle cx="12" cy="8" r="3.5" fill="#888"/>
-                        <path d="M6 18c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="#888" stroke-width="2" stroke-linecap="round"/>
-                    </svg>
-                </div>
-                <div class="contact-info">
-                    <h4>Mum</h4>
-                    <p>Receives weekly summaries</p>
-                </div>
-            </div>
-
-            <div class="contact-card">
-                <div class="contact-avatar">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                        <circle cx="12" cy="8" r="3.5" fill="#888"/>
-                        <path d="M6 18c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="#888" stroke-width="2" stroke-linecap="round"/>
-                    </svg>
-                </div>
-                <div class="contact-info">
-                    <h4>Sarah (Best Friend)</h4>
-                    <p>Can see when you're struggling</p>
-                </div>
-            </div>
-
-            <div class="contact-card">
-                <div class="contact-avatar">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                        <circle cx="12" cy="8" r="3.5" fill="#888"/>
-                        <path d="M6 18c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="#888" stroke-width="2" stroke-linecap="round"/>
-                    </svg>
-                </div>
-                <div class="contact-info">
-                    <h4>Dr. Murphy (Counselor)</h4>
-                    <p>Full access to session prep data</p>
-                </div>
-            </div>
-
-            <button class="btn">Add Someone to Circle</button>
-            
-            <div class="insight-box" style="margin-top: 24px;">
-                <p><strong>Privacy Note:</strong> You control what each person sees and can remove them anytime. They'll only see summaries, not your daily check-ins or raw data.</p>
+            <div class="stat-pill">
+                <div class="stat-pill-num">😐</div>
+                <div class="stat-pill-label">Last check-in</div>
             </div>
         </div>
 
-    </div>
-
-    <!-- Feedback Button -->
-    <button class="feedback-btn" onclick="openFeedback()">💬</button>
-
-    <!-- Feedback Modal -->
-    <div class="feedback-modal" id="feedbackModal">
-        <div class="feedback-content" id="feedbackContent">
-            <h2>Help us improve Sentinel</h2>
-            <p>Your feedback shapes how we build this tool. Takes 2 minutes.</p>
-
-            <form id="feedbackForm">
-                <!-- Question 1 -->
-                <div class="feedback-question">
-                    <label>How useful would Sentinel be for your counseling sessions?</label>
-                    <div class="emoji-options">
-                        <div class="emoji-option" data-question="usefulness" data-value="not-useful">
-                            <span>😞</span>
-                            <span class="emoji-text">Not useful</span>
-                        </div>
-                        <div class="emoji-option" data-question="usefulness" data-value="somewhat-useful">
-                            <span>😐</span>
-                            <span class="emoji-text">Somewhat useful</span>
-                        </div>
-                        <div class="emoji-option" data-question="usefulness" data-value="very-useful">
-                            <span>😊</span>
-                            <span class="emoji-text">Very useful</span>
-                        </div>
-                    </div>
+        <div class="card">
+            <div class="card-label">This week</div>
+            <div class="metric">
+                <div class="metric-left">
+                    <div class="metric-icon">🌙</div>
+                    <span class="metric-label">Sleep</span>
                 </div>
-
-                <!-- Question 2 -->
-                <div class="feedback-question">
-                    <label>Which feature is most valuable? (select all that apply)</label>
-                    <div class="checkbox-group">
-                        <div class="checkbox-option">
-                            <input type="checkbox" id="feature-weekly" name="features" value="weekly-summaries">
-                            <label for="feature-weekly">Weekly summaries</label>
-                        </div>
-                        <div class="checkbox-option">
-                            <input type="checkbox" id="feature-session" name="features" value="session-prep">
-                            <label for="feature-session">Session prep tool</label>
-                        </div>
-                        <div class="checkbox-option">
-                            <input type="checkbox" id="feature-context" name="features" value="context-prompts">
-                            <label for="feature-context">Context-aware prompts ("Your heart rate spiked on exam day...")</label>
-                        </div>
-                        <div class="checkbox-option">
-                            <input type="checkbox" id="feature-circle" name="features" value="care-circle">
-                            <label for="feature-circle">Care Circle</label>
-                        </div>
-                    </div>
+                <div class="metric-right">
+                    <span class="metric-value" data-metric="sleep-value">6h 42m</span>
+                    <span class="metric-change up">↑ 6m vs last week</span>
                 </div>
-
-                <!-- Question 3 -->
-                <div class="feedback-question">
-                    <label>Would you feel comfortable using Sentinel to track sleep, heart rate, and activity?</label>
-                    <div class="emoji-options">
-                        <div class="emoji-option" data-question="comfortable" data-value="no">
-                            <span>👎</span>
-                            <span class="emoji-text">No</span>
-                        </div>
-                        <div class="emoji-option" data-question="comfortable" data-value="maybe">
-                            <span>🤷</span>
-                            <span class="emoji-text">Maybe</span>
-                        </div>
-                        <div class="emoji-option" data-question="comfortable" data-value="yes">
-                            <span>👍</span>
-                            <span class="emoji-text">Yes</span>
-                        </div>
-                    </div>
+            </div>
+            <div class="metric">
+                <div class="metric-left">
+                    <div class="metric-icon">❤️</div>
+                    <span class="metric-label">Resting HR</span>
                 </div>
-
-                <!-- Question 4 -->
-                <div class="feedback-question">
-                    <label>Receiving personalized suggestions based on your data would be helpful</label>
-                    <div class="star-rating">
-                        <span class="star" data-question="suggestions" data-value="1">★</span>
-                        <span class="star" data-question="suggestions" data-value="2">★</span>
-                        <span class="star" data-question="suggestions" data-value="3">★</span>
-                        <span class="star" data-question="suggestions" data-value="4">★</span>
-                        <span class="star" data-question="suggestions" data-value="5">★</span>
-                    </div>
+                <div class="metric-right">
+                    <span class="metric-value" data-metric="heartrate-value">66 BPM</span>
+                    <span class="metric-change warn">↓ 19 BPM drop</span>
                 </div>
-
-                <!-- Question 5 -->
-                <div class="feedback-question">
-                    <label>I would be willing to share this data with my counselor</label>
-                    <div class="emoji-options">
-                        <div class="emoji-option" data-question="share" data-value="no">
-                            <span>👎</span>
-                            <span class="emoji-text">No</span>
-                        </div>
-                        <div class="emoji-option" data-question="share" data-value="maybe">
-                            <span>🤷</span>
-                            <span class="emoji-text">Maybe</span>
-                        </div>
-                        <div class="emoji-option" data-question="share" data-value="yes">
-                            <span>👍</span>
-                            <span class="emoji-text">Yes</span>
-                        </div>
-                    </div>
+            </div>
+            <div class="metric">
+                <div class="metric-left">
+                    <div class="metric-icon">👟</div>
+                    <span class="metric-label">Steps</span>
                 </div>
-
-                <!-- Question 6 -->
-                <div class="feedback-question">
-                    <label>What would make you more likely to use Sentinel?</label>
-                    <textarea class="text-input" name="improvements" placeholder="Your thoughts..."></textarea>
+                <div class="metric-right">
+                    <span class="metric-value" data-metric="steps-value">4,780</span>
+                    <span class="metric-change down">↓ 2,361 fewer/day</span>
                 </div>
-
-                <!-- Question 7 -->
-                <div class="feedback-question">
-                    <label>Any concerns or missing features?</label>
-                    <textarea class="text-input" name="concerns" placeholder="Your thoughts..."></textarea>
+            </div>
+            <div class="metric">
+                <div class="metric-left">
+                    <div class="metric-icon">📱</div>
+                    <span class="metric-label">Screen time</span>
                 </div>
-
-                <div class="feedback-buttons">
-                    <button type="button" class="feedback-cancel" onclick="closeFeedback()">Cancel</button>
-                    <button type="submit" class="feedback-submit">Submit Feedback</button>
+                <div class="metric-right">
+                    <span class="metric-value">7h 30m</span>
+                    <span class="metric-change down">↑ 2h more than usual</span>
                 </div>
-            </form>
+            </div>
+        </div>
+
+        <!-- Sen bubble - amber alert -->
+        <div class="sen-bubble amber">
+            <svg class="sen-small" viewBox="0 0 60 66" xmlns="http://www.w3.org/2000/svg">
+                <ellipse cx="30" cy="38" rx="18" ry="20" fill="var(--sen-body)"/>
+                <circle cx="14" cy="40" r="5" fill="var(--sen-cheek)" opacity="0.5"/>
+                <circle cx="46" cy="40" r="5" fill="var(--sen-cheek)" opacity="0.5"/>
+                <ellipse cx="23" cy="33" rx="3.5" ry="4" fill="var(--sen-eye)"/>
+                <ellipse cx="37" cy="33" rx="3.5" ry="4" fill="var(--sen-eye)"/>
+                <circle cx="24.5" cy="31.5" r="1.5" fill="white"/>
+                <circle cx="38.5" cy="31.5" r="1.5" fill="white"/>
+                <!-- Slightly raised brow = curious/alert -->
+                <path d="M20 27 Q23 25 27 27" stroke="var(--sen-dark)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                <path d="M34 27 Q37 25 40 27" stroke="var(--sen-dark)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                <path d="M25 43 Q30 47 35 43" stroke="var(--sen-dark)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                <ellipse cx="20" cy="20" rx="3.5" ry="5" fill="var(--sen-body)" stroke="var(--sen-dark)" stroke-width="1"/>
+                <ellipse cx="40" cy="20" rx="3.5" ry="5" fill="var(--sen-body)" stroke="var(--sen-dark)" stroke-width="1"/>
+            </svg>
+            <div class="bubble-text">
+                <div class="bubble-tag">⚡ Heads up</div>
+                <p>Your heart rate spiked to 97.6 BPM on Wednesday — your exam day. How are you feeling now it's over?</p>
+            </div>
+        </div>
+
+        <!-- Sen bubble - blue pattern -->
+        <div class="sen-bubble blue">
+            <svg class="sen-small" viewBox="0 0 60 66" xmlns="http://www.w3.org/2000/svg">
+                <ellipse cx="30" cy="38" rx="18" ry="20" fill="var(--sen-body)"/>
+                <circle cx="14" cy="40" r="5" fill="var(--sen-cheek)" opacity="0.5"/>
+                <circle cx="46" cy="40" r="5" fill="var(--sen-cheek)" opacity="0.5"/>
+                <ellipse cx="23" cy="33" rx="3.5" ry="4" fill="var(--sen-eye)"/>
+                <ellipse cx="37" cy="33" rx="3.5" ry="4" fill="var(--sen-eye)"/>
+                <circle cx="24.5" cy="31.5" r="1.5" fill="white"/>
+                <circle cx="38.5" cy="31.5" r="1.5" fill="white"/>
+                <path d="M25 43 Q30 46 35 43" stroke="var(--sen-dark)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                <ellipse cx="20" cy="20" rx="3.5" ry="5" fill="var(--sen-body)" stroke="var(--sen-dark)" stroke-width="1"/>
+                <ellipse cx="40" cy="20" rx="3.5" ry="5" fill="var(--sen-body)" stroke="var(--sen-dark)" stroke-width="1"/>
+            </svg>
+            <div class="bubble-text">
+                <div class="bubble-tag">🔍 Pattern</div>
+                <p>Lower heart rate + fewer steps this week. Could mean less stress, or less movement. Worth reflecting on what's changed.</p>
+            </div>
+        </div>
+
+        <button class="btn btn-primary" onclick="showScreen('checkin')">Do today's check-in</button>
+        <button class="btn btn-ghost" onclick="showScreen('weekly')">See weekly summary</button>
+        <p class="attribution">Real smartwatch data · Kaggle dataset</p>
+
+        <div class="nav-bar">
+            <button class="nav-item active" onclick="showNav(this,'home')">
+                <div class="nav-icon">🏠</div><div>Home</div>
+            </button>
+            <button class="nav-item" onclick="showNav(this,'weekly')">
+                <div class="nav-icon">📊</div><div>Weekly</div>
+            </button>
+            <button class="nav-item" onclick="showNav(this,'session')">
+                <div class="nav-icon">📝</div><div>Session</div>
+            </button>
+            <button class="nav-item" onclick="showNav(this,'circle')">
+                <div class="nav-icon">🫂</div><div>Circle</div>
+            </button>
         </div>
     </div>
 
-    <script>
-        // Real smartwatch data from Kaggle dataset
-        const healthData = {
-            week1: {
-                sleepDaily: [6.9, 4.5, 7.2, 4.2, 8.4, 5.6, 9.3],
-                stepsDaily: [538, 1867, 4855, 6932, 15460, 16359, 3974],
-                heartRateDaily: [91.0, 67.7, 97.6, 61.5, 95.1, 105.4, 80.6],
-                avgSleep: 6.6,
-                avgSteps: 7141,
-                avgHeartRate: 85.6
-            },
-            week2: {
-                sleepDaily: [7.6, 6.9, 6.9, 6.3, 6.5, 7.3, 5.7],
-                stepsDaily: [2522, 1487, 8194, 6732, 7769, 6339, 414],
-                heartRateDaily: [57.5, 76.2, 63.8, 63.4, 67.3, 77.9, 59.0],
-                avgSleep: 6.7,
-                avgSteps: 4780,
-                avgHeartRate: 66.4
-            }
-        };
+    <!-- ─────────────── CHECK-IN ─────────────── -->
+    <div class="screen" id="checkin">
+        <div class="page-header">
+            <button class="back-btn" onclick="showScreen('home')">← Back</button>
+            <h1>Daily <span>check-in</span></h1>
+        </div>
 
-        // Calculate changes
-        const sleepChange = (healthData.week2.avgSleep - healthData.week1.avgSleep).toFixed(1);
-        const stepsChange = Math.round(healthData.week2.avgSteps - healthData.week1.avgSteps);
-        const heartRateChange = (healthData.week2.avgHeartRate - healthData.week1.avgHeartRate).toFixed(1);
-        const sleepChangeHours = Math.floor(Math.abs(sleepChange));
-        const sleepChangeMins = Math.round((Math.abs(sleepChange) - sleepChangeHours) * 60);
-        
-        // Format screen time (keeping original as dataset doesn't have this)
-        const screenTimeWeek1 = 5.5;
-        const screenTimeWeek2 = 7.5;
-        const screenTimeChange = screenTimeWeek2 - screenTimeWeek1;
+        <div class="sen-bubble amber" style="margin-bottom:16px;">
+            <svg class="sen-small" viewBox="0 0 60 66" xmlns="http://www.w3.org/2000/svg">
+                <ellipse cx="30" cy="38" rx="18" ry="20" fill="var(--sen-body)"/>
+                <circle cx="14" cy="40" r="5" fill="var(--sen-cheek)" opacity="0.5"/>
+                <circle cx="46" cy="40" r="5" fill="var(--sen-cheek)" opacity="0.5"/>
+                <!-- big eyes = attentive -->
+                <ellipse cx="23" cy="33" rx="4" ry="5" fill="var(--sen-eye)"/>
+                <ellipse cx="37" cy="33" rx="4" ry="5" fill="var(--sen-eye)"/>
+                <circle cx="24.5" cy="31" r="1.8" fill="white"/>
+                <circle cx="38.5" cy="31" r="1.8" fill="white"/>
+                <path d="M25 43 Q30 47 35 43" stroke="var(--sen-dark)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                <ellipse cx="20" cy="20" rx="3.5" ry="5" fill="var(--sen-body)" stroke="var(--sen-dark)" stroke-width="1"/>
+                <ellipse cx="40" cy="20" rx="3.5" ry="5" fill="var(--sen-body)" stroke="var(--sen-dark)" stroke-width="1"/>
+            </svg>
+            <div class="bubble-text">
+                <div class="bubble-tag">📌 Context</div>
+                <p>Heart rate was up on exam day. I've been keeping an eye on you — how are you feeling since?</p>
+            </div>
+        </div>
 
-        // Feedback form data
-        let feedbackData = {};
+        <p class="q-text">How are you today?</p>
+        <p class="q-sub">No right answer. Just what's true.</p>
 
-        function showScreen(screenId) {
-            // Hide all screens
-            const screens = document.querySelectorAll('.screen');
-            screens.forEach(screen => screen.classList.remove('active'));
-            
-            // Show selected screen
-            document.getElementById(screenId).classList.add('active');
+        <div class="mood-grid">
+            <div class="mood-btn" onclick="selectMood(this)">
+                <div class="mood-emoji">😄</div>
+                <div class="mood-label">Great</div>
+            </div>
+            <div class="mood-btn" onclick="selectMood(this)">
+                <div class="mood-emoji">🙂</div>
+                <div class="mood-label">Good</div>
+            </div>
+            <div class="mood-btn" onclick="selectMood(this)">
+                <div class="mood-emoji">😐</div>
+                <div class="mood-label">Okay</div>
+            </div>
+            <div class="mood-btn" onclick="selectMood(this)">
+                <div class="mood-emoji">😕</div>
+                <div class="mood-label">Not great</div>
+            </div>
+            <div class="mood-btn" onclick="selectMood(this)">
+                <div class="mood-emoji">😔</div>
+                <div class="mood-label">Struggling</div>
+            </div>
+            <div class="mood-btn" onclick="selectMood(this)">
+                <div class="mood-emoji">😞</div>
+                <div class="mood-label">Really hard</div>
+            </div>
+        </div>
 
-            // Update nav bar active state
-            const navItems = document.querySelectorAll('.nav-item');
-            navItems.forEach(item => item.classList.remove('active'));
-            
-            // Scroll to top when changing screens
-            window.scrollTo(0, 0);
-        }
+        <p class="q-text" style="margin-top:22px;">What's on your mind?</p>
+        <p class="q-sub">Optional. Pick any that apply.</p>
 
-        function openFeedback() {
-            document.getElementById('feedbackModal').classList.add('active');
-        }
+        <div class="tag-options">
+            <button class="tag-btn" onclick="toggleTag(this)">Exams / deadlines</button>
+            <button class="tag-btn" onclick="toggleTag(this)">Social stress</button>
+            <button class="tag-btn" onclick="toggleTag(this)">Family</button>
+            <button class="tag-btn" onclick="toggleTag(this)">Feeling lonely</button>
+            <button class="tag-btn" onclick="toggleTag(this)">Physical health</button>
+            <button class="tag-btn" onclick="toggleTag(this)">Nothing specific</button>
+        </div>
 
-        function closeFeedback() {
-            document.getElementById('feedbackModal').classList.remove('active');
-        }
+        <button class="btn btn-primary" onclick="showScreen('home')" style="margin-top:22px;">Submit check-in</button>
+    </div>
 
-        // Update metrics on page load
-        window.addEventListener('DOMContentLoaded', function() {
-            // Update home screen metrics
-            const sleepValueEl = document.querySelector('[data-metric="sleep-value"]');
-            const sleepChangeEl = document.querySelector('[data-metric="sleep-change"]');
-            const stepsValueEl = document.querySelector('[data-metric="steps-value"]');
-            const stepsChangeEl = document.querySelector('[data-metric="steps-change"]');
-            const heartRateValueEl = document.querySelector('[data-metric="heartrate-value"]');
-            const heartRateChangeEl = document.querySelector('[data-metric="heartrate-change"]');
-            const screenValueEl = document.querySelector('[data-metric="screen-value"]');
-            const screenChangeEl = document.querySelector('[data-metric="screen-change"]');
+    <!-- ─────────────── WEEKLY ─────────────── -->
+    <div class="screen" id="weekly">
+        <div class="page-header">
+            <button class="back-btn" onclick="showScreen('home')">← Back</button>
+            <h1>Weekly <span>summary</span></h1>
+        </div>
 
-            if (sleepValueEl) {
-                const hours = Math.floor(healthData.week2.avgSleep);
-                const mins = Math.round((healthData.week2.avgSleep - hours) * 60);
-                sleepValueEl.textContent = `${hours}h ${mins}m`;
-            }
-            
-            if (sleepChangeEl) {
-                const changeText = sleepChange > 0 ? `↑ ${sleepChangeHours}h ${sleepChangeMins}m` : `↓ ${sleepChangeHours}h ${sleepChangeMins}m`;
-                sleepChangeEl.textContent = changeText;
-                sleepChangeEl.className = 'metric-change ' + (sleepChange > 0 ? 'up' : 'down');
-            }
+        <div class="card">
+            <div class="card-label">Sleep</div>
+            <svg viewBox="0 0 320 110" style="width:100%;height:100px;margin:6px 0;">
+                <line x1="40" y1="20" x2="310" y2="20" stroke="#E8D8C4" stroke-width="1"/>
+                <line x1="40" y1="45" x2="310" y2="45" stroke="#E8D8C4" stroke-width="1"/>
+                <line x1="40" y1="70" x2="310" y2="70" stroke="#E8D8C4" stroke-width="1"/>
+                <line x1="40" y1="95" x2="310" y2="95" stroke="#E8D8C4" stroke-width="1"/>
+                <text x="5" y="25" font-size="9" fill="#C4A882" font-family="Nunito">10h</text>
+                <text x="10" y="50" font-size="9" fill="#C4A882" font-family="Nunito">8h</text>
+                <text x="10" y="75" font-size="9" fill="#C4A882" font-family="Nunito">6h</text>
+                <text x="10" y="100" font-size="9" fill="#C4A882" font-family="Nunito">4h</text>
+                <polyline points="50,38 88,82 126,35 164,88 202,20 240,67 278,26" fill="none" stroke="#C4A882" stroke-width="1.5" stroke-dasharray="4,4"/>
+                <polyline points="50,30 88,38 126,38 164,50 202,47 240,35 278,66" fill="none" stroke="#E8920A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="50" cy="30" r="3.5" fill="#E8920A"/>
+                <circle cx="88" cy="38" r="3.5" fill="#E8920A"/>
+                <circle cx="126" cy="38" r="3.5" fill="#E8920A"/>
+                <circle cx="164" cy="50" r="3.5" fill="#E8920A"/>
+                <circle cx="202" cy="47" r="3.5" fill="#E8920A"/>
+                <circle cx="240" cy="35" r="3.5" fill="#E8920A"/>
+                <circle cx="278" cy="66" r="3.5" fill="#E8920A"/>
+                <text x="45" y="110" font-size="8" fill="#C4A882" font-family="Nunito">Mon</text>
+                <text x="83" y="110" font-size="8" fill="#C4A882" font-family="Nunito">Tue</text>
+                <text x="119" y="110" font-size="8" fill="#C4A882" font-family="Nunito">Wed</text>
+                <text x="159" y="110" font-size="8" fill="#C4A882" font-family="Nunito">Thu</text>
+                <text x="199" y="110" font-size="8" fill="#C4A882" font-family="Nunito">Fri</text>
+                <text x="236" y="110" font-size="8" fill="#C4A882" font-family="Nunito">Sat</text>
+                <text x="273" y="110" font-size="8" fill="#C4A882" font-family="Nunito">Sun</text>
+            </svg>
+            <div class="chart-legend">
+                <div class="legend-item"><svg width="14" height="3"><line x1="0" y1="1.5" x2="14" y2="1.5" stroke="#E8920A" stroke-width="2.5"/></svg>This week</div>
+                <div class="legend-item"><svg width="14" height="3"><line x1="0" y1="1.5" x2="14" y2="1.5" stroke="#C4A882" stroke-width="2" stroke-dasharray="3,3"/></svg>Last week</div>
+            </div>
+            <p style="margin-top:10px;">Averaged 6.7h — fairly stable. But nights ranged from 5.7h to 7.6h, which is more variable than usual.</p>
+        </div>
 
-            if (stepsValueEl) {
-                stepsValueEl.textContent = Math.round(healthData.week2.avgSteps).toLocaleString() + ' steps';
-            }
+        <div class="card">
+            <div class="card-label">Resting heart rate</div>
+            <svg viewBox="0 0 320 110" style="width:100%;height:100px;margin:6px 0;">
+                <line x1="40" y1="20" x2="310" y2="20" stroke="#E8D8C4" stroke-width="1"/>
+                <line x1="40" y1="40" x2="310" y2="40" stroke="#E8D8C4" stroke-width="1"/>
+                <line x1="40" y1="60" x2="310" y2="60" stroke="#E8D8C4" stroke-width="1"/>
+                <line x1="40" y1="80" x2="310" y2="80" stroke="#E8D8C4" stroke-width="1"/>
+                <line x1="40" y1="100" x2="310" y2="100" stroke="#E8D8C4" stroke-width="1"/>
+                <text x="5" y="24" font-size="9" fill="#C4A882" font-family="Nunito">110</text>
+                <text x="10" y="44" font-size="9" fill="#C4A882" font-family="Nunito">90</text>
+                <text x="10" y="64" font-size="9" fill="#C4A882" font-family="Nunito">70</text>
+                <text x="10" y="84" font-size="9" fill="#C4A882" font-family="Nunito">50</text>
+                <polyline points="50,43 88,60 126,35 164,66 202,40 240,25 278,47" fill="none" stroke="#C4A882" stroke-width="1.5" stroke-dasharray="4,4"/>
+                <polyline points="50,72 88,55 126,63 164,63 202,61 240,53 278,70" fill="none" stroke="#2070B8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="50" cy="72" r="3.5" fill="#2070B8"/>
+                <circle cx="88" cy="55" r="3.5" fill="#2070B8"/>
+                <circle cx="126" cy="63" r="3.5" fill="#2070B8"/>
+                <circle cx="164" cy="63" r="3.5" fill="#2070B8"/>
+                <circle cx="202" cy="61" r="3.5" fill="#2070B8"/>
+                <circle cx="240" cy="53" r="3.5" fill="#2070B8"/>
+                <circle cx="278" cy="70" r="3.5" fill="#2070B8"/>
+                <text x="45" y="110" font-size="8" fill="#C4A882" font-family="Nunito">Mon</text>
+                <text x="83" y="110" font-size="8" fill="#C4A882" font-family="Nunito">Tue</text>
+                <text x="119" y="110" font-size="8" fill="#C4A882" font-family="Nunito">Wed</text>
+                <text x="159" y="110" font-size="8" fill="#C4A882" font-family="Nunito">Thu</text>
+                <text x="199" y="110" font-size="8" fill="#C4A882" font-family="Nunito">Fri</text>
+                <text x="236" y="110" font-size="8" fill="#C4A882" font-family="Nunito">Sat</text>
+                <text x="273" y="110" font-size="8" fill="#C4A882" font-family="Nunito">Sun</text>
+            </svg>
+            <div class="chart-legend">
+                <div class="legend-item"><svg width="14" height="3"><line x1="0" y1="1.5" x2="14" y2="1.5" stroke="#2070B8" stroke-width="2.5"/></svg>This week</div>
+                <div class="legend-item"><svg width="14" height="3"><line x1="0" y1="1.5" x2="14" y2="1.5" stroke="#C4A882" stroke-width="2" stroke-dasharray="3,3"/></svg>Last week</div>
+            </div>
+            <p style="margin-top:10px;">Down 19 BPM vs last week (85.6 → 66.4). Less stress? Better recovery? Worth asking yourself what felt different.</p>
+        </div>
 
-            if (stepsChangeEl) {
-                const changeText = stepsChange > 0 ? `↑ ${Math.abs(stepsChange).toLocaleString()}` : `↓ ${Math.abs(stepsChange).toLocaleString()}`;
-                stepsChangeEl.textContent = changeText;
-                stepsChangeEl.className = 'metric-change ' + (stepsChange > 0 ? 'up' : 'down');
-            }
+        <div class="card">
+            <div class="card-label">Mood & stress</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:8px 0 12px;">
+                <div>
+                    <p style="font-size:10px;font-weight:800;color:var(--text-dim);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;">Stress</p>
+                    <svg viewBox="0 0 160 95" style="width:100%;height:88px;">
+                        <line x1="20" y1="15" x2="150" y2="15" stroke="#E8D8C4" stroke-width="1"/>
+                        <line x1="20" y1="35" x2="150" y2="35" stroke="#E8D8C4" stroke-width="1"/>
+                        <line x1="20" y1="55" x2="150" y2="55" stroke="#E8D8C4" stroke-width="1"/>
+                        <line x1="20" y1="75" x2="150" y2="75" stroke="#E8D8C4" stroke-width="1"/>
+                        <text x="5" y="19" font-size="8" fill="#C4A882" font-family="Nunito">10</text>
+                        <text x="8" y="39" font-size="8" fill="#C4A882" font-family="Nunito">7</text>
+                        <text x="8" y="59" font-size="8" fill="#C4A882" font-family="Nunito">4</text>
+                        <text x="8" y="79" font-size="8" fill="#C4A882" font-family="Nunito">1</text>
+                        <polyline points="28,55 46,51 64,15 82,35 100,75 118,51 136,75" fill="none" stroke="#C43030" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <circle cx="28" cy="55" r="2.5" fill="#C43030"/>
+                        <circle cx="46" cy="51" r="2.5" fill="#C43030"/>
+                        <circle cx="64" cy="15" r="2.5" fill="#C43030"/>
+                        <circle cx="82" cy="35" r="2.5" fill="#C43030"/>
+                        <circle cx="100" cy="75" r="2.5" fill="#C43030"/>
+                        <circle cx="118" cy="51" r="2.5" fill="#C43030"/>
+                        <circle cx="136" cy="75" r="2.5" fill="#C43030"/>
+                        <text x="24" y="92" font-size="7" fill="#C4A882" font-family="Nunito">M</text>
+                        <text x="43" y="92" font-size="7" fill="#C4A882" font-family="Nunito">T</text>
+                        <text x="61" y="92" font-size="7" fill="#C4A882" font-family="Nunito">W</text>
+                        <text x="79" y="92" font-size="7" fill="#C4A882" font-family="Nunito">T</text>
+                        <text x="98" y="92" font-size="7" fill="#C4A882" font-family="Nunito">F</text>
+                        <text x="115" y="92" font-size="7" fill="#C4A882" font-family="Nunito">S</text>
+                        <text x="133" y="92" font-size="7" fill="#C4A882" font-family="Nunito">S</text>
+                    </svg>
+                </div>
+                <div>
+                    <p style="font-size:10px;font-weight:800;color:var(--text-dim);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;">Daily mood</p>
+                    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-top:10px;">
+                        <div style="text-align:center;"><div style="aspect-ratio:1;background:#D4EDCA;border:2px solid #90C890;border-radius:5px;margin-bottom:3px;"></div><span style="font-size:7px;color:var(--text-dim);font-weight:700;">M</span></div>
+                        <div style="text-align:center;"><div style="aspect-ratio:1;background:#FEF3DC;border:2px solid #F0CC80;border-radius:5px;margin-bottom:3px;"></div><span style="font-size:7px;color:var(--text-dim);font-weight:700;">T</span></div>
+                        <div style="text-align:center;"><div style="aspect-ratio:1;background:#FDEAEA;border:2px solid #F0A0A0;border-radius:5px;margin-bottom:3px;"></div><span style="font-size:7px;color:var(--text-dim);font-weight:700;">W</span></div>
+                        <div style="text-align:center;"><div style="aspect-ratio:1;background:#FEF3DC;border:2px solid #F0CC80;border-radius:5px;margin-bottom:3px;"></div><span style="font-size:7px;color:var(--text-dim);font-weight:700;">T</span></div>
+                        <div style="text-align:center;"><div style="aspect-ratio:1;background:#D4EDCA;border:2px solid #90C890;border-radius:5px;margin-bottom:3px;"></div><span style="font-size:7px;color:var(--text-dim);font-weight:700;">F</span></div>
+                        <div style="text-align:center;"><div style="aspect-ratio:1;background:#FEF3DC;border:2px solid #F0CC80;border-radius:5px;margin-bottom:3px;"></div><span style="font-size:7px;color:var(--text-dim);font-weight:700;">S</span></div>
+                        <div style="text-align:center;"><div style="aspect-ratio:1;background:#D4EDCA;border:2px solid #90C890;border-radius:5px;margin-bottom:3px;"></div><span style="font-size:7px;color:var(--text-dim);font-weight:700;">S</span></div>
+                    </div>
+                    <div style="display:flex;gap:5px;margin-top:10px;flex-wrap:wrap;">
+                        <div style="display:flex;align-items:center;gap:3px;font-size:8px;color:var(--text-muted);font-weight:700;"><div style="width:8px;height:8px;background:#D4EDCA;border:1.5px solid #90C890;border-radius:2px;"></div>Great</div>
+                        <div style="display:flex;align-items:center;gap:3px;font-size:8px;color:var(--text-muted);font-weight:700;"><div style="width:8px;height:8px;background:#FEF3DC;border:1.5px solid #F0CC80;border-radius:2px;"></div>Okay</div>
+                        <div style="display:flex;align-items:center;gap:3px;font-size:8px;color:var(--text-muted);font-weight:700;"><div style="width:8px;height:8px;background:#FDEAEA;border:1.5px solid #F0A0A0;border-radius:2px;"></div>Hard</div>
+                    </div>
+                </div>
+            </div>
+            <p>6/7 days checked in. Common stressors: <span class="tag-inline tag-stress">Exams</span><span class="tag-inline tag-stress">Loneliness</span>. Stress peaked Wednesday — exam day.</p>
+        </div>
 
-            if (heartRateValueEl) {
-                heartRateValueEl.textContent = Math.round(healthData.week2.avgHeartRate) + ' BPM';
-            }
+        <!-- Sen bubble on weekly -->
+        <div class="sen-bubble green">
+            <svg class="sen-small" viewBox="0 0 60 66" xmlns="http://www.w3.org/2000/svg">
+                <ellipse cx="30" cy="38" rx="18" ry="20" fill="var(--sen-body)"/>
+                <circle cx="14" cy="40" r="5" fill="var(--sen-cheek)" opacity="0.5"/>
+                <circle cx="46" cy="40" r="5" fill="var(--sen-cheek)" opacity="0.5"/>
+                <ellipse cx="23" cy="33" rx="3.5" ry="4" fill="var(--sen-eye)"/>
+                <ellipse cx="37" cy="33" rx="3.5" ry="4" fill="var(--sen-eye)"/>
+                <circle cx="24.5" cy="31.5" r="1.5" fill="white"/>
+                <circle cx="38.5" cy="31.5" r="1.5" fill="white"/>
+                <!-- happy squint -->
+                <path d="M20 30 Q23 27 27 30" stroke="var(--sen-dark)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                <path d="M33 30 Q37 27 40 30" stroke="var(--sen-dark)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                <path d="M24 43 Q30 48 36 43" stroke="var(--sen-dark)" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+                <ellipse cx="20" cy="20" rx="3.5" ry="5" fill="var(--sen-body)" stroke="var(--sen-dark)" stroke-width="1"/>
+                <ellipse cx="40" cy="20" rx="3.5" ry="5" fill="var(--sen-body)" stroke="var(--sen-dark)" stroke-width="1"/>
+            </svg>
+            <div class="bubble-text">
+                <div class="bubble-tag">✨ Nice one</div>
+                <p>6 check-ins this week — that's really good. Keeping track is half the battle.</p>
+            </div>
+        </div>
 
-            if (heartRateChangeEl) {
-                const changeText = heartRateChange > 0 ? `↑ ${Math.abs(heartRateChange)}` : `↓ ${Math.abs(heartRateChange)}`;
-                heartRateChangeEl.textContent = changeText;
-                heartRateChangeEl.className = 'metric-change ' + (heartRateChange > 0 ? 'up' : 'down');
-            }
+        <button class="btn btn-primary" onclick="showScreen('session')">Prep for next session</button>
+    </div>
 
-            if (screenValueEl) {
-                const hours = Math.floor(screenTimeWeek2);
-                const mins = Math.round((screenTimeWeek2 - hours) * 60);
-                screenValueEl.textContent = `${hours}h ${mins}m`;
-            }
+    <!-- ─────────────── SESSION PREP ─────────────── -->
+    <div class="screen" id="session">
+        <div class="page-header">
+            <button class="back-btn" onclick="showScreen('home')">← Back</button>
+            <h1>Session <span>prep</span></h1>
+        </div>
 
-            if (screenChangeEl) {
-                const changeHours = Math.floor(screenTimeChange);
-                const changeMins = Math.round((screenTimeChange - changeHours) * 60);
-                const changeText = `↑ ${changeHours}h ${changeMins}m`;
-                screenChangeEl.textContent = changeText;
-            }
+        <!-- Sen with clipboard energy -->
+        <div class="sen-bubble blue" style="margin-bottom:16px;">
+            <svg class="sen-small" viewBox="0 0 60 66" xmlns="http://www.w3.org/2000/svg">
+                <ellipse cx="30" cy="38" rx="18" ry="20" fill="var(--sen-body)"/>
+                <circle cx="14" cy="40" r="5" fill="var(--sen-cheek)" opacity="0.5"/>
+                <circle cx="46" cy="40" r="5" fill="var(--sen-cheek)" opacity="0.5"/>
+                <ellipse cx="23" cy="33" rx="3.5" ry="4.5" fill="var(--sen-eye)"/>
+                <ellipse cx="37" cy="33" rx="3.5" ry="4.5" fill="var(--sen-eye)"/>
+                <circle cx="24.5" cy="31" r="1.5" fill="white"/>
+                <circle cx="38.5" cy="31" r="1.5" fill="white"/>
+                <path d="M26 43 Q30 46 34 43" stroke="var(--sen-dark)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                <ellipse cx="20" cy="20" rx="3.5" ry="5" fill="var(--sen-body)" stroke="var(--sen-dark)" stroke-width="1"/>
+                <ellipse cx="40" cy="20" rx="3.5" ry="5" fill="var(--sen-body)" stroke="var(--sen-dark)" stroke-width="1"/>
+            </svg>
+            <div class="bubble-text">
+                <div class="bubble-tag">📋 Ready to help</div>
+                <p>Here's what I've noticed this week — things worth bringing up with your counselor.</p>
+            </div>
+        </div>
 
-            // Feedback form interactions
-            setupFeedbackForm();
+        <div class="prep-item">
+            <div class="prep-dot" style="background:var(--red);"></div>
+            <div>
+                <h4>Heart rate dropped 19 BPM</h4>
+                <p>85.6 → 66.4 this week. Could mean less stress, better recovery, or reduced activity.</p>
+            </div>
+        </div>
+        <div class="prep-item">
+            <div class="prep-dot" style="background:var(--amber);"></div>
+            <div>
+                <h4>Moving significantly less</h4>
+                <p>2,361 fewer steps/day. More consistent pattern but at a lower baseline.</p>
+            </div>
+        </div>
+        <div class="prep-item">
+            <div class="prep-dot" style="background:var(--blue);"></div>
+            <div>
+                <h4>Sleep more variable</h4>
+                <p>Average fine (6.7h), but nights swung from 5.7h to 7.6h — more up and down than usual.</p>
+            </div>
+        </div>
+        <div class="prep-item">
+            <div class="prep-dot" style="background:var(--text-dim);"></div>
+            <div>
+                <h4>Screen time up 2 hours</h4>
+                <p>From 5.5h to 7.5h/day. Mostly social media and YouTube.</p>
+            </div>
+        </div>
+        <div class="prep-item">
+            <div class="prep-dot" style="background:var(--red);"></div>
+            <div>
+                <h4>Mood trending lower mid-week</h4>
+                <p>Main stressors flagged: exams and feeling lonely.</p>
+            </div>
+        </div>
+
+        <div class="sen-bubble amber" style="margin-top:4px;">
+            <svg class="sen-tiny" viewBox="0 0 60 66" xmlns="http://www.w3.org/2000/svg">
+                <ellipse cx="30" cy="38" rx="18" ry="20" fill="var(--sen-body)"/>
+                <ellipse cx="23" cy="33" rx="3.5" ry="4" fill="var(--sen-eye)"/>
+                <ellipse cx="37" cy="33" rx="3.5" ry="4" fill="var(--sen-eye)"/>
+                <circle cx="24.5" cy="31.5" r="1.5" fill="white"/>
+                <circle cx="38.5" cy="31.5" r="1.5" fill="white"/>
+                <path d="M25 43 Q30 46 35 43" stroke="var(--sen-dark)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                <ellipse cx="20" cy="20" rx="3.5" ry="5" fill="var(--sen-body)" stroke="var(--sen-dark)" stroke-width="1"/>
+                <ellipse cx="40" cy="20" rx="3.5" ry="5" fill="var(--sen-body)" stroke="var(--sen-dark)" stroke-width="1"/>
+            </svg>
+            <div class="bubble-text">
+                <div class="bubble-tag">🔍 Pattern</div>
+                <p>Lower HR + fewer steps together might be worth unpacking — could mean your body is resting more, or something's shifted in how you're coping.</p>
+            </div>
+        </div>
+
+        <button class="btn btn-primary">Share this summary</button>
+        <button class="btn btn-ghost" onclick="showScreen('home')">Done for now</button>
+    </div>
+
+    <!-- ─────────────── CARE CIRCLE ─────────────── -->
+    <div class="screen" id="circle">
+        <div class="page-header">
+            <button class="back-btn" onclick="showScreen('home')">← Back</button>
+            <h1>Care <span>circle</span></h1>
+        </div>
+
+        <div class="sen-bubble green" style="margin-bottom:16px;">
+            <svg class="sen-small" viewBox="0 0 60 66" xmlns="http://www.w3.org/2000/svg">
+                <ellipse cx="30" cy="38" rx="18" ry="20" fill="var(--sen-body)"/>
+                <circle cx="14" cy="40" r="5" fill="var(--sen-cheek)" opacity="0.5"/>
+                <circle cx="46" cy="40" r="5" fill="var(--sen-cheek)" opacity="0.5"/>
+                <ellipse cx="23" cy="33" rx="3.5" ry="4" fill="var(--sen-eye)"/>
+                <ellipse cx="37" cy="33" rx="3.5" ry="4" fill="var(--sen-eye)"/>
+                <circle cx="24.5" cy="31.5" r="1.5" fill="white"/>
+                <circle cx="38.5" cy="31.5" r="1.5" fill="white"/>
+                <path d="M24 43 Q30 48 36 43" stroke="var(--sen-dark)" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+                <ellipse cx="20" cy="20" rx="3.5" ry="5" fill="var(--sen-body)" stroke="var(--sen-dark)" stroke-width="1"/>
+                <ellipse cx="40" cy="20" rx="3.5" ry="5" fill="var(--sen-body)" stroke="var(--sen-dark)" stroke-width="1"/>
+            </svg>
+            <div class="bubble-text">
+                <div class="bubble-tag">🫂 Your people</div>
+                <p>These are the people keeping an eye on you alongside me. You control exactly what they see.</p>
+            </div>
+        </div>
+
+        <div class="contact-card">
+            <div class="contact-avatar">👩</div>
+            <div class="contact-info">
+                <h4>Mum</h4>
+                <p>Gets a weekly summary</p>
+            </div>
+            <span class="contact-badge badge-weekly">Weekly</span>
+        </div>
+        <div class="contact-card">
+            <div class="contact-avatar">👩‍🦱</div>
+            <div class="contact-info">
+                <h4>Best Friend</h4>
+                <p>Notified when you're struggling</p>
+            </div>
+            <span class="contact-badge badge-alert">Alerts</span>
+        </div>
+        <div class="contact-card">
+            <div class="contact-avatar">🧑‍⚕️</div>
+            <div class="contact-info">
+                <h4>Counsellor</h4>
+                <p>Full session prep access</p>
+            </div>
+            <span class="contact-badge badge-full">Full access</span>
+        </div>
+
+        <button class="btn btn-ghost" style="margin-top:4px;">+ Add someone to your circle</button>
+
+        <div class="sen-bubble blue" style="margin-top:14px;">
+            <svg class="sen-tiny" viewBox="0 0 60 66" xmlns="http://www.w3.org/2000/svg">
+                <ellipse cx="30" cy="38" rx="18" ry="20" fill="var(--sen-body)"/>
+                <ellipse cx="23" cy="33" rx="3.5" ry="4" fill="var(--sen-eye)"/>
+                <ellipse cx="37" cy="33" rx="3.5" ry="4" fill="var(--sen-eye)"/>
+                <circle cx="24.5" cy="31.5" r="1.5" fill="white"/>
+                <circle cx="38.5" cy="31.5" r="1.5" fill="white"/>
+                <path d="M25 43 Q30 46 35 43" stroke="var(--sen-dark)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                <ellipse cx="20" cy="20" rx="3.5" ry="5" fill="var(--sen-body)" stroke="var(--sen-dark)" stroke-width="1"/>
+                <ellipse cx="40" cy="20" rx="3.5" ry="5" fill="var(--sen-body)" stroke="var(--sen-dark)" stroke-width="1"/>
+            </svg>
+            <div class="bubble-text">
+                <div class="bubble-tag">🔒 Privacy</div>
+                <p>They only ever see summaries — never your raw data or individual check-ins. Remove anyone anytime.</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- FAB -->
+<button class="feedback-fab" onclick="openFeedback()">💬</button>
+
+<!-- Modal -->
+<div class="feedback-modal" id="feedbackModal">
+    <div class="feedback-sheet" id="feedbackContent">
+        <div class="sheet-handle"></div>
+        <div class="sheet-header">
+            <svg width="30" height="34" viewBox="0 0 60 66" xmlns="http://www.w3.org/2000/svg">
+                <ellipse cx="30" cy="38" rx="18" ry="20" fill="var(--sen-body)"/>
+                <circle cx="14" cy="40" r="5" fill="var(--sen-cheek)" opacity="0.5"/>
+                <circle cx="46" cy="40" r="5" fill="var(--sen-cheek)" opacity="0.5"/>
+                <ellipse cx="23" cy="33" rx="3.5" ry="4" fill="var(--sen-eye)"/>
+                <ellipse cx="37" cy="33" rx="3.5" ry="4" fill="var(--sen-eye)"/>
+                <circle cx="24.5" cy="31.5" r="1.5" fill="white"/>
+                <circle cx="38.5" cy="31.5" r="1.5" fill="white"/>
+                <path d="M24 43 Q30 48 36 43" stroke="var(--sen-dark)" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+                <ellipse cx="20" cy="20" rx="3.5" ry="5" fill="var(--sen-body)" stroke="var(--sen-dark)" stroke-width="1"/>
+                <ellipse cx="40" cy="20" rx="3.5" ry="5" fill="var(--sen-body)" stroke="var(--sen-dark)" stroke-width="1"/>
+            </svg>
+            <h2>Help me improve!</h2>
+        </div>
+        <p>We want to know what's working and what isn't. Takes ~2 minutes.</p>
+
+        <form id="feedbackForm">
+            <div class="fb-q">
+                <label>How useful would Sentinel be for your counseling sessions?</label>
+                <div class="emoji-opts">
+                    <div class="emoji-opt" data-question="usefulness" data-value="not-useful"><span>😞</span><span class="emoji-opt-label">Not useful</span></div>
+                    <div class="emoji-opt" data-question="usefulness" data-value="somewhat"><span>😐</span><span class="emoji-opt-label">Somewhat</span></div>
+                    <div class="emoji-opt" data-question="usefulness" data-value="very-useful"><span>😊</span><span class="emoji-opt-label">Very useful</span></div>
+                </div>
+            </div>
+            <div class="fb-q">
+                <label>Which features feel most valuable?</label>
+                <div class="check-group">
+                    <div class="check-opt"><input type="checkbox" id="f1" name="features" value="weekly"><label for="f1">Weekly summaries</label></div>
+                    <div class="check-opt"><input type="checkbox" id="f2" name="features" value="session"><label for="f2">Session prep tool</label></div>
+                    <div class="check-opt"><input type="checkbox" id="f3" name="features" value="context"><label for="f3">Context-aware prompts (exam day spike, etc.)</label></div>
+                    <div class="check-opt"><input type="checkbox" id="f4" name="features" value="circle"><label for="f4">Care Circle</label></div>
+                </div>
+            </div>
+            <div class="fb-q">
+                <label>Comfortable tracking sleep, HR and activity?</label>
+                <div class="emoji-opts">
+                    <div class="emoji-opt" data-question="comfortable" data-value="no"><span>👎</span><span class="emoji-opt-label">No</span></div>
+                    <div class="emoji-opt" data-question="comfortable" data-value="maybe"><span>🤷</span><span class="emoji-opt-label">Maybe</span></div>
+                    <div class="emoji-opt" data-question="comfortable" data-value="yes"><span>👍</span><span class="emoji-opt-label">Yes</span></div>
+                </div>
+            </div>
+            <div class="fb-q">
+                <label>Personalised suggestions based on your data would be helpful</label>
+                <div class="star-row">
+                    <span class="star" data-question="suggestions" data-value="1">★</span>
+                    <span class="star" data-question="suggestions" data-value="2">★</span>
+                    <span class="star" data-question="suggestions" data-value="3">★</span>
+                    <span class="star" data-question="suggestions" data-value="4">★</span>
+                    <span class="star" data-question="suggestions" data-value="5">★</span>
+                </div>
+            </div>
+            <div class="fb-q">
+                <label>I'd share this data with my counselor</label>
+                <div class="emoji-opts">
+                    <div class="emoji-opt" data-question="share" data-value="no"><span>👎</span><span class="emoji-opt-label">No</span></div>
+                    <div class="emoji-opt" data-question="share" data-value="maybe"><span>🤷</span><span class="emoji-opt-label">Maybe</span></div>
+                    <div class="emoji-opt" data-question="share" data-value="yes"><span>👍</span><span class="emoji-opt-label">Yes</span></div>
+                </div>
+            </div>
+            <div class="fb-q">
+                <label>What would make you more likely to use Sentinel?</label>
+                <textarea class="fb-textarea" name="improvements" placeholder="Your thoughts..."></textarea>
+            </div>
+            <div class="fb-q">
+                <label>Any concerns or missing features?</label>
+                <textarea class="fb-textarea" name="concerns" placeholder="Your thoughts..."></textarea>
+            </div>
+            <div class="fb-btns">
+                <button type="button" class="fb-cancel" onclick="closeFeedback()">Cancel</button>
+                <button type="submit" class="fb-submit">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    const healthData = {
+        week2: { avgSleep: 6.7, avgSteps: 4780, avgHeartRate: 66.4 }
+    };
+
+    let feedbackData = {};
+
+    function showScreen(id) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        window.scrollTo(0, 0);
+    }
+
+    function showNav(btn, id) {
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        btn.classList.add('active');
+        showScreen(id);
+    }
+
+    function selectMood(btn) {
+        document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+    }
+
+    function toggleTag(btn) { btn.classList.toggle('selected'); }
+
+    function openFeedback() { document.getElementById('feedbackModal').classList.add('active'); }
+    function closeFeedback() { document.getElementById('feedbackModal').classList.remove('active'); }
+
+    window.addEventListener('DOMContentLoaded', function () {
+        const h = Math.floor(healthData.week2.avgSleep);
+        const m = Math.round((healthData.week2.avgSleep - h) * 60);
+        const sleepEl = document.querySelector('[data-metric="sleep-value"]');
+        if (sleepEl) sleepEl.textContent = `${h}h ${m}m`;
+        const stepsEl = document.querySelector('[data-metric="steps-value"]');
+        if (stepsEl) stepsEl.textContent = Math.round(healthData.week2.avgSteps).toLocaleString();
+        const hrEl = document.querySelector('[data-metric="heartrate-value"]');
+        if (hrEl) hrEl.textContent = Math.round(healthData.week2.avgHeartRate) + ' BPM';
+
+        document.querySelectorAll('.emoji-opt').forEach(opt => {
+            opt.addEventListener('click', function () {
+                const q = this.dataset.question;
+                document.querySelectorAll(`.emoji-opt[data-question="${q}"]`).forEach(o => o.classList.remove('selected'));
+                this.classList.add('selected');
+                feedbackData[q] = this.dataset.value;
+            });
         });
 
-        function setupFeedbackForm() {
-            // Emoji option clicks
-            document.querySelectorAll('.emoji-option').forEach(option => {
-                option.addEventListener('click', function() {
-                    const question = this.dataset.question;
-                    const value = this.dataset.value;
-                    
-                    // Deselect other options for this question
-                    document.querySelectorAll(`.emoji-option[data-question="${question}"]`).forEach(opt => {
-                        opt.classList.remove('selected');
-                    });
-                    
-                    // Select this option
-                    this.classList.add('selected');
-                    feedbackData[question] = value;
+        document.querySelectorAll('.star').forEach(star => {
+            star.addEventListener('click', function () {
+                const q = this.dataset.question;
+                const v = parseInt(this.dataset.value);
+                feedbackData[q] = v;
+                document.querySelectorAll(`.star[data-question="${q}"]`).forEach(s => {
+                    s.classList.toggle('selected', parseInt(s.dataset.value) <= v);
                 });
             });
+        });
 
-            // Star rating clicks
-            document.querySelectorAll('.star').forEach(star => {
-                star.addEventListener('click', function() {
-                    const question = this.dataset.question;
-                    const value = parseInt(this.dataset.value);
-                    
-                    feedbackData[question] = value;
-                    
-                    // Update star display
-                    document.querySelectorAll(`.star[data-question="${question}"]`).forEach(s => {
-                        const starValue = parseInt(s.dataset.value);
-                        if (starValue <= value) {
-                            s.classList.add('selected');
-                        } else {
-                            s.classList.remove('selected');
-                        }
-                    });
-                });
-            });
+        document.getElementById('feedbackForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const features = [];
+            document.querySelectorAll('input[name="features"]:checked').forEach(cb => features.push(cb.value));
+            feedbackData.features = features;
+            feedbackData.improvements = document.querySelector('textarea[name="improvements"]').value;
+            feedbackData.concerns = document.querySelector('textarea[name="concerns"]').value;
+            feedbackData.timestamp = new Date().toISOString();
+            const existing = JSON.parse(localStorage.getItem('sentinelFeedback') || '[]');
+            existing.push(feedbackData);
+            localStorage.setItem('sentinelFeedback', JSON.stringify(existing));
 
-            // Form submission
-            document.getElementById('feedbackForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                // Collect checkbox data
-                const features = [];
-                document.querySelectorAll('input[name="features"]:checked').forEach(cb => {
-                    features.push(cb.value);
-                });
-                feedbackData.features = features;
-                
-                // Collect text input data
-                feedbackData.improvements = document.querySelector('textarea[name="improvements"]').value;
-                feedbackData.concerns = document.querySelector('textarea[name="concerns"]').value;
-                
-                // Add timestamp
-                feedbackData.timestamp = new Date().toISOString();
-                
-                // Log to console (in production, this would send to a backend)
-                console.log('Feedback submitted:', feedbackData);
-                
-                // Store in localStorage
-                const existingFeedback = JSON.parse(localStorage.getItem('sentinelFeedback') || '[]');
-                existingFeedback.push(feedbackData);
-                localStorage.setItem('sentinelFeedback', JSON.stringify(existingFeedback));
-                
-                // Show success message
-                showFeedbackSuccess();
-            });
-        }
-
-        function showFeedbackSuccess() {
-            const content = document.getElementById('feedbackContent');
-            content.innerHTML = `
-                <div class="feedback-success">
-                    <h3>Thank you!</h3>
-                    <p>Your feedback helps us build a better tool for students and counselors.</p>
-                    <button class="btn" onclick="closeFeedback()">Close</button>
+            document.getElementById('feedbackContent').innerHTML = `
+                <div class="fb-success">
+                    <svg width="70" height="78" viewBox="0 0 90 100" xmlns="http://www.w3.org/2000/svg" style="margin:0 auto;display:block;">
+                        <ellipse cx="45" cy="96" rx="28" ry="5" fill="rgba(245,200,66,0.2)"/>
+                        <ellipse cx="45" cy="60" rx="26" ry="28" fill="var(--sen-body)"/>
+                        <ellipse cx="36" cy="52" rx="5" ry="3" fill="var(--sen-eye)"/>
+                        <ellipse cx="54" cy="52" rx="5" ry="3" fill="var(--sen-eye)"/>
+                        <circle cx="38" cy="51" r="1.5" fill="white"/>
+                        <circle cx="56" cy="51" r="1.5" fill="white"/>
+                        <path d="M37 64 Q45 72 53 64" stroke="var(--sen-dark)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                        <circle cx="29" cy="62" r="6" fill="var(--sen-cheek)" opacity="0.5"/>
+                        <circle cx="61" cy="62" r="6" fill="var(--sen-cheek)" opacity="0.5"/>
+                        <ellipse cx="30" cy="32" rx="5" ry="7" fill="var(--sen-body)" stroke="var(--sen-dark)" stroke-width="1"/>
+                        <ellipse cx="60" cy="32" rx="5" ry="7" fill="var(--sen-body)" stroke="var(--sen-dark)" stroke-width="1"/>
+                    </svg>
+                    <h3>Thanks so much! 🎉</h3>
+                    <p>Your feedback helps us build something students actually want to use.</p>
+                    <button class="btn btn-primary" onclick="closeFeedback()">Close</button>
                 </div>
             `;
-        }
-    </script>
+        });
+    });
+</script>
 </body>
 </html>
